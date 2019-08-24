@@ -148,7 +148,7 @@ class XoopsNotification extends XoopsObject
     public function notifyUser($template_dir, $template, $subject, $tags)
     {
         // Check the user's notification preference.
-        /* @var $member_handler XoopsMemberHandler */
+        /* @var XoopsMemberHandler $member_handler */
         $member_handler = xoops_getHandler('member');
         $user           = $member_handler->getUser($this->getVar('not_uid'));
         if (!is_object($user)) {
@@ -161,7 +161,7 @@ class XoopsNotification extends XoopsObject
         switch ($method) {
             case XOOPS_NOTIFICATION_METHOD_PM:
                 $xoopsMailer->usePM();
-                /* @var $config_handler XoopsConfigHandler  */
+                /* @var XoopsConfigHandler $config_handler */
                 $config_handler    = xoops_getHandler('config');
                 $xoopsMailerConfig = $config_handler->getConfigsByCat(XOOPS_CONF_MAILER);
                 $xoopsMailer->setFromUser($member_handler->getUser($xoopsMailerConfig['fromuid']));
@@ -342,7 +342,7 @@ class XoopsNotificationHandler extends XoopsObjectHandler
         $ret   = array();
         $limit = $start = 0;
         $sql   = 'SELECT * FROM ' . $this->db->prefix('xoopsnotifications');
-        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
+        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
             $sql .= ' ' . $criteria->renderWhere();
             $sort = ($criteria->getSort() != '') ? $criteria->getSort() : 'not_id';
             $sql .= ' ORDER BY ' . $sort . ' ' . $criteria->getOrder();
@@ -353,7 +353,7 @@ class XoopsNotificationHandler extends XoopsObjectHandler
         if (!$result) {
             return $ret;
         }
-        while ($myrow = $this->db->fetchArray($result)) {
+        while (false !== ($myrow = $this->db->fetchArray($result))) {
             $notification = new XoopsNotification();
             $notification->assignVars($myrow);
             if (!$id_as_key) {
@@ -378,7 +378,7 @@ class XoopsNotificationHandler extends XoopsObjectHandler
     public function getCount(CriteriaElement $criteria = null)
     {
         $sql = 'SELECT COUNT(*) FROM ' . $this->db->prefix('xoopsnotifications');
-        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
+        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
             $sql .= ' ' . $criteria->renderWhere();
         }
         if (!$result = $this->db->query($sql)) {
@@ -399,7 +399,7 @@ class XoopsNotificationHandler extends XoopsObjectHandler
     public function deleteAll(CriteriaElement $criteria = null)
     {
         $sql = 'DELETE FROM ' . $this->db->prefix('xoopsnotifications');
-        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
+        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
             $sql .= ' ' . $criteria->renderWhere();
         }
         if (!$result = $this->db->query($sql)) {
@@ -504,7 +504,7 @@ class XoopsNotificationHandler extends XoopsObjectHandler
             $events = array($events);
         }
         foreach ($events as $event) {
-            /* @var  $notification XoopsNotification */
+            /* @var  XoopsNotification $notification */
             if ($notification = $this->getNotification($module_id, $category, $item_id, $event, $user_id)) {
                 if ($notification->getVar('not_mode') != $mode) {
                     $this->updateByField($notification, 'not_mode', $mode);
@@ -643,13 +643,13 @@ class XoopsNotificationHandler extends XoopsObjectHandler
             $module    = $xoopsModule;
             $module_id = !empty($xoopsModule) ? $xoopsModule->getVar('mid') : 0;
         } else {
-            /* @var $module_handler XoopsModuleHandler */
+            /* @var XoopsModuleHandler $module_handler */
             $module_handler = xoops_getHandler('module');
             $module         = $module_handler->get($module_id);
         }
 
         // Check if event is enabled
-        /* @var $config_handler XoopsConfigHandler  */
+        /* @var XoopsConfigHandler $config_handler */
         $config_handler = xoops_getHandler('config');
         $mod_config     = $config_handler->getConfigsByCat(0, $module->getVar('mid'));
         if (empty($mod_config['notification_enabled'])) {

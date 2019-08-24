@@ -260,7 +260,7 @@ $imageId = isset($_GET['id']) ? (int)$_GET['id'] : false;
 $imageUrl = isset($_GET['url']) ? (string)$_GET['url'] : (isset($_GET['src']) ? (string)$_GET['src'] : false);
 if (!empty($imageId)) {
     // If image is a Xoops image
-    /* @var $imageHandler XoopsImageHandler */
+    /* @var XoopsImageHandler $imageHandler */
     $imageHandler = xoops_getHandler('image');
     $criteria = new CriteriaCompo(new Criteria('i.image_display', true));
     $criteria->add(new Criteria('i.image_id', $imageId));
@@ -462,16 +462,18 @@ switch ($imageMimetype) {
                                                 // level of 0 (no compression) through 9 (max)
         break;
     case 'image/png':
+    case 'image/x-png':
         $output_function = 'imagepng';
         $do_sharpen = false;
         $quality = round(10 - ($quality / 10)); // PNG needs a compression level of 0 (no compression) through 9
         break;
     case 'image/jpeg':
+    case 'image/pjpeg':
         $output_function = 'imagejpeg';
         $do_sharpen = true;
         break;
     default:
-        exit400BadReq();
+        exit404BadReq();
         break;
 }
 

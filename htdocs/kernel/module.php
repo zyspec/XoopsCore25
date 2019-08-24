@@ -137,7 +137,7 @@ class XoopsModule extends XoopsObject
      * Get module info
      *
      * @param  string $name
-     * @return array  |string    Array of module information.
+     * @return array|string    Array of module information.
      *                     If {@link $name} is set, returns a single module information item as string.
      */
     public function &getInfo($name = null)
@@ -436,7 +436,7 @@ class XoopsModule extends XoopsObject
      */
     public static function getByDirname($dirname)
     {
-        /* @var $modhandler XoopsModuleHandler */
+        /* @var XoopsModuleHandler $modhandler */
         $modhandler = xoops_getHandler('module');
         $inst       = $modhandler->getByDirname($dirname);
 
@@ -811,7 +811,7 @@ class XoopsModuleHandler extends XoopsObjectHandler
         $sql = sprintf('SELECT block_id FROM %s WHERE module_id = %u', $this->db->prefix('block_module_link'), $module->getVar('mid'));
         if ($result = $this->db->query($sql)) {
             $block_id_arr = array();
-            while ($myrow = $this->db->fetchArray($result)) {
+            while (false !== ($myrow = $this->db->fetchArray($result))) {
                 $block_id_arr[] = $myrow['block_id'];
             }
         }
@@ -857,7 +857,7 @@ class XoopsModuleHandler extends XoopsObjectHandler
         $ret   = array();
         $limit = $start = 0;
         $sql   = 'SELECT * FROM ' . $this->db->prefix('modules');
-        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
+        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
             $sql .= ' ' . $criteria->renderWhere();
             $sql .= ' ORDER BY weight ' . $criteria->getOrder() . ', mid ASC';
             $limit = $criteria->getLimit();
@@ -867,7 +867,7 @@ class XoopsModuleHandler extends XoopsObjectHandler
         if (!$result) {
             return $ret;
         }
-        while ($myrow = $this->db->fetchArray($result)) {
+        while (false !== ($myrow = $this->db->fetchArray($result))) {
             $module = new XoopsModule();
             $module->assignVars($myrow);
             if (!$id_as_key) {
@@ -890,7 +890,7 @@ class XoopsModuleHandler extends XoopsObjectHandler
     public function getCount(CriteriaElement $criteria = null)
     {
         $sql = 'SELECT COUNT(*) FROM ' . $this->db->prefix('modules');
-        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
+        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
             $sql .= ' ' . $criteria->renderWhere();
         }
         if (!$result = $this->db->query($sql)) {

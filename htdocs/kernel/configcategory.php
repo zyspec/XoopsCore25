@@ -211,7 +211,7 @@ class XoopsConfigCategoryHandler extends XoopsObjectHandler
         $ret   = array();
         $limit = $start = 0;
         $sql   = 'SELECT * FROM ' . $this->db->prefix('configcategory');
-        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
+        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
             $sql .= ' ' . $criteria->renderWhere();
             $sort = !in_array($criteria->getSort(), array(
                 'confcat_id',
@@ -225,7 +225,7 @@ class XoopsConfigCategoryHandler extends XoopsObjectHandler
         if (!$result) {
             return $ret;
         }
-        while ($myrow = $this->db->fetchArray($result)) {
+        while (false !== ($myrow = $this->db->fetchArray($result))) {
             $confcat = new XoopsConfigCategory();
             $confcat->assignVars($myrow);
             if (!$id_as_key) {

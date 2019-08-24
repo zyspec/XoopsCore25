@@ -27,7 +27,7 @@ function install_acceptUser($hash = '')
         return false;
     }
     $uname = $claims->uname;
-    /* @var $memberHandler XoopsMemberHandler */
+    /* @var XoopsMemberHandler $memberHandler */
     $memberHandler = xoops_getHandler('member');
     $user = array_pop($memberHandler->getUsers(new Criteria('uname', $uname)));
 
@@ -223,10 +223,8 @@ function xoDiagIfWritable($path)
  */
 function xoPhpVersion()
 {
-    if (version_compare(phpversion(), '5.3.7', '>=')) {
+    if (version_compare(phpversion(), '5.3.9', '>=')) {
         return xoDiag(1, phpversion());
-    //} elseif (version_compare(phpversion(), '5.3.7', '>=')) {
-    //    return xoDiag(0, phpversion());
     } else {
         return xoDiag(-1, phpversion());
     }
@@ -363,7 +361,11 @@ function xoFormFieldCollation($name, $value, $label, $help, $link, $charset)
 
     $options           = array();
     foreach ($collations as $key => $isDefault) {
-        $options[$key] = $key . (($isDefault) ? ' (Default)' : '');
+        if ($isDefault) {  // 'Yes' or ''
+            $options = array($key => $key . ' (Default)') + $options;
+        } else {
+            $options[$key] = $key;
+        }
     }
 
     return xoFormSelect($name, $value, $label, $options, $help);
@@ -443,8 +445,6 @@ function xoPutLicenseKey($system_key, $licensefile, $license_file_dist = 'licens
 function xoBuildLicenceKey()
 {
     $xoops_serdat = array();
-    mt_srand(((float)('0' . substr(microtime(), strpos(microtime(), ' ') + 1, strlen(microtime()) - strpos(microtime(), ' ') + 1))) * mt_rand(30, 99999));
-    mt_srand(((float)('0' . substr(microtime(), strpos(microtime(), ' ') + 1, strlen(microtime()) - strpos(microtime(), ' ') + 1))) * mt_rand(30, 99999));
     $checksums = array(1 => 'md5', 2 => 'sha1');
     $type      = mt_rand(1, 2);
     $func      = $checksums[$type];

@@ -25,9 +25,8 @@ include_once $GLOBALS['xoops']->path('class/xoopsformloader.php');
 function b_system_online_show()
 {
     global $xoopsUser, $xoopsModule;
-    /* @var $online_handler XoopsOnlineHandler  */
+    /* @var XoopsOnlineHandler $online_handler */
     $online_handler = xoops_getHandler('online');
-    mt_srand((double)microtime() * 1000000);
     // set gc probabillity to 10% for now..
     if (mt_rand(1, 100) < 11) {
         $online_handler->gc(300);
@@ -118,7 +117,7 @@ function b_system_main_show()
     $criteria->add(new Criteria('isactive', 1));
     $criteria->add(new Criteria('weight', 0, '>'));
     $modules            = $module_handler->getObjects($criteria, true);
-    /* @var $moduleperm_handler XoopsGroupPermHandler  */
+    /* @var XoopsGroupPermHandler $moduleperm_handler */
     $moduleperm_handler = xoops_getHandler('groupperm');
     $groups             = is_object($xoopsUser) ? $xoopsUser->getGroups() : XOOPS_GROUP_ANONYMOUS;
     $read_allowed       = $moduleperm_handler->getItemIds('module_read', $groups);
@@ -202,7 +201,7 @@ function b_system_waiting_show()
 {
     global $xoopsUser;
     $xoopsDB        = XoopsDatabaseFactory::getDatabaseConnection();
-    /* @var $module_handler XoopsModuleHandler */
+    /* @var XoopsModuleHandler $module_handler */
     $module_handler = xoops_getHandler('module');
     $block          = array();
 
@@ -318,7 +317,7 @@ function b_system_info_show($options)
         if ($xoopsDB->getRowsNum($result) > 0) {
             $prev_caption = '';
             $i            = 0;
-            while ($userinfo = $xoopsDB->fetchArray($result)) {
+            while (false !== ($userinfo = $xoopsDB->fetchArray($result))) {
                 if ($prev_caption != $userinfo['groupname']) {
                     $prev_caption                = $userinfo['groupname'];
                     $block['groups'][$i]['name'] = $myts->htmlSpecialChars($userinfo['groupname']);
@@ -326,20 +325,20 @@ function b_system_info_show($options)
                 if (isset($xoopsUser) && is_object($xoopsUser)) {
                     $block['groups'][$i]['users'][] = array(
                         'id'      => $userinfo['uid'],
-                        'name'    => $myts->htmlspecialchars($userinfo['uname']),
+                        'name'    => $myts->htmlSpecialChars($userinfo['uname']),
                         'msglink' => "<a href=\"javascript:openWithSelfMain('" . XOOPS_URL . '/pmlite.php?send2=1&amp;to_userid=' . $userinfo['uid'] . "','pmlite',565,500);\"><img src=\"" . XOOPS_URL . "/images/icons/pm_small.gif\" border=\"0\" width=\"27\" height=\"17\" alt=\"\" /></a>",
                         'avatar'  => XOOPS_UPLOAD_URL . '/' . $userinfo['user_avatar']);
                 } else {
                     if ($userinfo['user_viewemail']) {
                         $block['groups'][$i]['users'][] = array(
                             'id'      => $userinfo['uid'],
-                            'name'    => $myts->htmlspecialchars($userinfo['uname']),
+                            'name'    => $myts->htmlSpecialChars($userinfo['uname']),
                             'msglink' => '<a href="mailto:' . $userinfo['email'] . '"><img src="' . XOOPS_URL . '/images/icons/em_small.gif" border="0" width="16" height="14" alt="" /></a>',
                             'avatar'  => XOOPS_UPLOAD_URL . '/' . $userinfo['user_avatar']);
                     } else {
                         $block['groups'][$i]['users'][] = array(
                             'id'      => $userinfo['uid'],
-                            'name'    => $myts->htmlspecialchars($userinfo['uname']),
+                            'name'    => $myts->htmlSpecialChars($userinfo['uname']),
                             'msglink' => '&nbsp;',
                             'avatar'  => XOOPS_UPLOAD_URL . '/' . $userinfo['user_avatar']);
                     }
@@ -369,7 +368,7 @@ function b_system_newmembers_show($options)
     $criteria->setOrder('DESC');
     $criteria->setSort('user_regdate');
     $criteria->setLimit($limit);
-    /* @var $member_handler XoopsMemberHandler */
+    /* @var XoopsMemberHandler $member_handler */
     $member_handler = xoops_getHandler('member');
     $newmembers     = $member_handler->getUsers($criteria);
     $count          = count($newmembers);
@@ -405,7 +404,7 @@ function b_system_topposters_show($options)
     $criteria->setOrder('DESC');
     $criteria->setSort('posts');
     $criteria->setLimit($limit);
-    /* @var $member_handler XoopsMemberHandler */
+    /* @var XoopsMemberHandler $member_handler */
     $member_handler = xoops_getHandler('member');
     $topposters     = $member_handler->getUsers($criteria);
     $count          = count($topposters);
@@ -457,9 +456,9 @@ function b_system_comments_show($options)
     // Check modules permissions
 
     $comments       = $comment_handler->getObjects($criteria, true);
-    /* @var $member_handler XoopsMemberHandler */
+    /* @var XoopsMemberHandler $member_handler */
     $member_handler = xoops_getHandler('member');
-    /* @var $module_handler XoopsModuleHandler */
+    /* @var XoopsModuleHandler $module_handler */
     $module_handler = xoops_getHandler('module');
     $modules        = $module_handler->getObjects(new Criteria('hascomments', 1), true);
     $comment_config = array();

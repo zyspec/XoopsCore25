@@ -50,7 +50,7 @@ function xoops_module_update_profile(XoopsModule $module, $oldversion = null)
 
         include_once __DIR__ . '/install.php';
         xoops_module_install_profile($module);
-        /* @var $goupperm_handler XoopsGroupPermHandler */
+        /* @var XoopsGroupPermHandler $goupperm_handler */
         $goupperm_handler = xoops_getHandler('groupperm');
 
         $field_handler = xoops_getModuleHandler('field', $module->getVar('dirname', 'n'));
@@ -60,7 +60,7 @@ function xoops_module_update_profile(XoopsModule $module, $oldversion = null)
         $sql           = 'SELECT * FROM `' . $GLOBALS['xoopsDB']->prefix('user_profile_field') . "` WHERE `field_name` NOT IN ('" . implode("', '", $skip_fields) . "')";
         $result        = $GLOBALS['xoopsDB']->query($sql);
         $fields        = array();
-        while ($myrow = $GLOBALS['xoopsDB']->fetchArray($result)) {
+        while (false !== ($myrow = $GLOBALS['xoopsDB']->fetchArray($result))) {
             $fields[] = $myrow['field_name'];
             $object   = $field_handler->create();
             $object->setVars($myrow, true);

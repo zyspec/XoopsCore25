@@ -304,6 +304,7 @@ class XoopsMemberHandler
         if (!$asobject) {
             return $group_ids;
         } else {
+            $ret = array();
             foreach ($group_ids as $g_id) {
                 $ret[] = $this->getGroup($g_id);
             }
@@ -484,7 +485,7 @@ class XoopsMemberHandler
         }
 
         $limit = $start = 0;
-        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
+        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
             $criteriaCompo->add($criteria);
             $sql_criteria = $criteriaCompo->render();
             if ($criteria->getSort() != '') {
@@ -505,7 +506,7 @@ class XoopsMemberHandler
         if (!$result = $this->userHandler->db->query($sql, $limit, $start)) {
             return $ret;
         }
-        while ($myrow = $this->userHandler->db->fetchArray($result)) {
+        while (false !== ($myrow = $this->userHandler->db->fetchArray($result))) {
             if ($asobject) {
                 $user = new XoopsUser();
                 $user->assignVars($myrow);
@@ -539,7 +540,7 @@ class XoopsMemberHandler
         if (!empty($groups)) {
             $criteriaCompo->add(new Criteria('m.groupid', '(' . implode(', ', $groups) . ')', 'IN'));
         }
-        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
+        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
             $criteriaCompo->add($criteria);
         }
         $sql_criteria = $criteriaCompo->render();

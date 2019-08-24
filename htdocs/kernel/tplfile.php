@@ -402,7 +402,7 @@ class XoopsTplfileHandler extends XoopsObjectHandler
         } else {
             $sql = 'SELECT * FROM ' . $this->db->prefix('tplfile');
         }
-        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
+        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
             $sql .= ' ' . $criteria->renderWhere() . ' ORDER BY tpl_refid';
             $limit = $criteria->getLimit();
             $start = $criteria->getStart();
@@ -411,7 +411,7 @@ class XoopsTplfileHandler extends XoopsObjectHandler
         if (!$result) {
             return $ret;
         }
-        while ($myrow = $this->db->fetchArray($result)) {
+        while (false !== ($myrow = $this->db->fetchArray($result))) {
             $tplfile = new XoopsTplfile();
             $tplfile->assignVars($myrow);
             if (!$id_as_key) {
@@ -434,7 +434,7 @@ class XoopsTplfileHandler extends XoopsObjectHandler
     public function getCount(CriteriaElement $criteria = null)
     {
         $sql = 'SELECT COUNT(*) FROM ' . $this->db->prefix('tplfile');
-        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
+        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
             $sql .= ' ' . $criteria->renderWhere();
         }
         if (!$result = $this->db->query($sql)) {
@@ -459,7 +459,7 @@ class XoopsTplfileHandler extends XoopsObjectHandler
         if (!$result) {
             return $ret;
         }
-        while ($myrow = $this->db->fetchArray($result)) {
+        while (false !== ($myrow = $this->db->fetchArray($result))) {
             if ($myrow['tpl_module'] != '') {
                 $ret[$myrow['tpl_module']] = $myrow['count'];
             }

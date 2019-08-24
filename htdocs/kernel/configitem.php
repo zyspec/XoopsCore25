@@ -399,7 +399,7 @@ class XoopsConfigItemHandler extends XoopsObjectHandler
         $ret   = array();
         $limit = $start = 0;
         $sql   = 'SELECT * FROM ' . $this->db->prefix('config');
-        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
+        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
             $sql .= ' ' . $criteria->renderWhere();
             $sql .= ' ORDER BY conf_order ASC';
             $limit = $criteria->getLimit();
@@ -409,7 +409,7 @@ class XoopsConfigItemHandler extends XoopsObjectHandler
         if (!$result) {
             return false;
         }
-        while ($myrow = $this->db->fetchArray($result)) {
+        while (false !== ($myrow = $this->db->fetchArray($result))) {
             $config = new XoopsConfigItem();
             $config->assignVars($myrow);
             if (!$id_as_key) {
@@ -432,7 +432,7 @@ class XoopsConfigItemHandler extends XoopsObjectHandler
     public function getCount(CriteriaElement $criteria = null)
     {
         $sql   = 'SELECT * FROM ' . $this->db->prefix('config');
-        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
+        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
             $sql .= ' ' . $criteria->renderWhere();
         }
         $result = $this->db->query($sql);

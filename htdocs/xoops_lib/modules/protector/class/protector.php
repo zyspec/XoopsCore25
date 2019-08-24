@@ -257,7 +257,7 @@ class Protector
 
     public function deactivateCurrentUser()
     {
-        /* @var $xoopsUser XoopsUser */
+        /* @var XoopsUser $xoopsUser */
         global $xoopsUser;
 
         if (is_object($xoopsUser)) {
@@ -364,7 +364,7 @@ class Protector
      */
     public static function get_filepath4bwlimit()
     {
-        return XOOPS_TRUST_PATH . '/modules/protector/configs/bwlimit' . substr(md5(XOOPS_ROOT_PATH . XOOPS_DB_USER . XOOPS_DB_PREFIX), 0, 6);
+        return XOOPS_VAR_PATH . '/protector/bwlimit' . substr(md5(XOOPS_ROOT_PATH . XOOPS_DB_USER . XOOPS_DB_PREFIX), 0, 6);
     }
 
     /**
@@ -445,7 +445,7 @@ class Protector
      */
     public static function get_filepath4badips()
     {
-        return XOOPS_TRUST_PATH . '/modules/protector/configs/badips' . substr(md5(XOOPS_ROOT_PATH . XOOPS_DB_USER . XOOPS_DB_PREFIX), 0, 6);
+        return XOOPS_VAR_PATH . '/protector/badips' . substr(md5(XOOPS_ROOT_PATH . XOOPS_DB_USER . XOOPS_DB_PREFIX), 0, 6);
     }
 
     /**
@@ -473,7 +473,7 @@ class Protector
      */
     public static function get_filepath4group1ips()
     {
-        return XOOPS_TRUST_PATH . '/modules/protector/configs/group1ips' . substr(md5(XOOPS_ROOT_PATH . XOOPS_DB_USER . XOOPS_DB_PREFIX), 0, 6);
+        return XOOPS_VAR_PATH . '/protector/group1ips' . substr(md5(XOOPS_ROOT_PATH . XOOPS_DB_USER . XOOPS_DB_PREFIX), 0, 6);
     }
 
     /**
@@ -481,7 +481,7 @@ class Protector
      */
     public function get_filepath4confighcache()
     {
-        return XOOPS_TRUST_PATH . '/modules/protector/configs/configcache' . substr(md5(XOOPS_ROOT_PATH . XOOPS_DB_USER . XOOPS_DB_PREFIX), 0, 6);
+        return XOOPS_VAR_PATH . '/protector/configcache' . substr(md5(XOOPS_ROOT_PATH . XOOPS_DB_USER . XOOPS_DB_PREFIX), 0, 6);
     }
 
     /**
@@ -1159,13 +1159,6 @@ class Protector
         }
         $uri     = @$_SERVER['REQUEST_URI'];
 
-        // skip ajax fine uploader traffic
-        $parts = parse_url($uri);
-        $basename = empty($parts['path']) ? '' : basename($parts['path']);
-        if (('ajaxfineupload.php' === $basename) && ('' !== \Xmf\Request::getHeader('Authorization', ''))) {
-            return true;
-        }
-
         $ip4sql  = $xoopsDB->quote($ip->asReadable());
         $uri4sql = $xoopsDB->quote($uri);
 
@@ -1430,7 +1423,7 @@ class Protector
             }
 
             // security bug of class/criteria.php 2005/6/27
-            if ($_POST['uname'] === '0' || $_COOKIE['autologin_pass'] === '0') {
+            if ((isset($_POST['uname']) && $_POST['uname'] === '0') || (isset($_COOKIE['autologin_pass']) && $_COOKIE['autologin_pass'] === '0')) {
                 $this->output_log('CRITERIA');
                 exit;
             }

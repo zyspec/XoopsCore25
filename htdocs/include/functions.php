@@ -190,7 +190,7 @@ function xoops_getActiveModules()
 function xoops_setActiveModules()
 {
     xoops_load('XoopsCache');
-    /* @var $module_handler XoopsModuleHandler */
+    /* @var XoopsModuleHandler $module_handler */
     $module_handler = xoops_getHandler('module');
     $modules_obj    = $module_handler->getObjects(new Criteria('isactive', 1));
     $modules_active = array();
@@ -536,7 +536,6 @@ function xoops_makepass()
         'en',
         'be',
         'se');
-    mt_srand((double)microtime() * 1000000);
     for ($count = 1; $count <= 4; ++$count) {
         if (mt_rand() % 10 == 1) {
             $makepass .= sprintf('%0.0f', (mt_rand() % 50) + 1);
@@ -617,7 +616,6 @@ function xoops_getbanner()
     list($numrows) = $db->fetchRow($bresult);
     if ($numrows > 1) {
         --$numrows;
-        mt_srand((double)microtime() * 1000000);
         $bannum = mt_rand(0, $numrows);
     } else {
         $bannum = 0;
@@ -858,7 +856,7 @@ function xoops_getrank($rank_id = 0, $posts = 0)
         $sql = 'SELECT rank_title AS title, rank_image AS image FROM ' . $db->prefix('ranks') . ' WHERE rank_min <= ' . $posts . ' AND rank_max >= ' . $posts . ' AND rank_special = 0';
     }
     $rank          = $db->fetchArray($db->query($sql));
-    $rank['title'] = $myts->htmlspecialchars($rank['title']);
+    $rank['title'] = $myts->htmlSpecialChars($rank['title']);
     $rank['id']    = $rank_id;
 
     return $rank;
@@ -966,7 +964,7 @@ function xoops_comment_delete($module_id, $item_id)
                     }
                 }
             }
-            /* @var $member_handler XoopsMemberHandler */
+            /* @var XoopsMemberHandler $member_handler */
             $member_handler = xoops_getHandler('member');
             foreach ($deleted_num as $user_id => $post_num) {
                 // update user posts
@@ -999,7 +997,7 @@ function xoops_groupperm_deletebymoditem($module_id, $perm_name, $item_id = null
     if ((int)$module_id <= 1) {
         return false;
     }
-    /* @var  $gperm_handler XoopsGroupPermHandler */
+    /* @var  XoopsGroupPermHandler $gperm_handler */
     $gperm_handler = xoops_getHandler('groupperm');
 
     return $gperm_handler->deleteByModule($module_id, $perm_name, $item_id);
@@ -1083,7 +1081,7 @@ function xoops_getConfigOption($option, $type = 'XOOPS_CONF')
         return $coreOptions[$option];
     }
     $ret            = false;
-    /* @var $config_handler XoopsConfigHandler  */
+    /* @var XoopsConfigHandler $config_handler */
     $config_handler = xoops_getHandler('config');
     $configs        = $config_handler->getConfigsByCat(is_array($type) ? $type : constant($type));
     if ($configs) {
@@ -1135,10 +1133,10 @@ function xoops_getModuleOption($option, $dirname = '')
     }
 
     $ret            = false;
-    /* @var $module_handler XoopsModuleHandler */
+    /* @var XoopsModuleHandler $module_handler */
     $module_handler = xoops_getHandler('module');
     $module         = $module_handler->getByDirname($dirname);
-    /* @var $config_handler XoopsConfigHandler  */
+    /* @var XoopsConfigHandler $config_handler */
     $config_handler = xoops_getHandler('config');
     if (is_object($module)) {
         $moduleConfig = $config_handler->getConfigsByCat(0, $module->getVar('mid'));

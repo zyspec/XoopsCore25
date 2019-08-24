@@ -61,7 +61,7 @@ switch ($op) {
         $xoopsTpl->assign('breadcrumb', 1);
 
         $form           = new XoopsThemeForm(constant($confcat->getVar('confcat_name')), 'pref_form', 'admin.php?fct=preferences', 'post', true);
-        /* @var $config_handler XoopsConfigHandler  */
+        /* @var XoopsConfigHandler $config_handler */
         $config_handler = xoops_getHandler('config');
         $criteria       = new CriteriaCompo();
         $criteria->add(new Criteria('conf_modid', 0));
@@ -78,9 +78,9 @@ switch ($op) {
                     $myts = MyTextSanitizer::getInstance();
                     if ($config[$i]->getVar('conf_valuetype') === 'array') {
                         // this is exceptional.. only when value type is arrayneed a smarter way for this
-                        $ele = ($config[$i]->getVar('conf_value') != '') ? new XoopsFormTextArea($title, $config[$i]->getVar('conf_name'), $myts->htmlspecialchars(implode('|', $config[$i]->getConfValueForOutput())), 5, 50) : new XoopsFormTextArea($title, $config[$i]->getVar('conf_name'), '', 5, 50);
+                        $ele = ($config[$i]->getVar('conf_value') != '') ? new XoopsFormTextArea($title, $config[$i]->getVar('conf_name'), $myts->htmlSpecialChars(implode('|', $config[$i]->getConfValueForOutput())), 5, 50) : new XoopsFormTextArea($title, $config[$i]->getVar('conf_name'), '', 5, 50);
                     } else {
-                        $ele = new XoopsFormTextArea($title, $config[$i]->getVar('conf_name'), $myts->htmlspecialchars($config[$i]->getConfValueForOutput()), 5, 50);
+                        $ele = new XoopsFormTextArea($title, $config[$i]->getVar('conf_name'), $myts->htmlSpecialChars($config[$i]->getConfValueForOutput()), 5, 50);
                     }
                     break;
 
@@ -223,23 +223,23 @@ switch ($op) {
 
                 case 'password':
                     $myts = MyTextSanitizer::getInstance();
-                    $ele  = new XoopsFormPassword($title, $config[$i]->getVar('conf_name'), 50, 255, $myts->htmlspecialchars($config[$i]->getConfValueForOutput()));
+                    $ele  = new XoopsFormPassword($title, $config[$i]->getVar('conf_name'), 50, 255, $myts->htmlSpecialChars($config[$i]->getConfValueForOutput()));
                     break;
 
                 case 'color':
                     $myts = MyTextSanitizer::getInstance();
-                    $ele  = new XoopsFormColorPicker($title, $config[$i]->getVar('conf_name'), $myts->htmlspecialchars($config[$i]->getConfValueForOutput()));
+                    $ele  = new XoopsFormColorPicker($title, $config[$i]->getVar('conf_name'), $myts->htmlSpecialChars($config[$i]->getConfValueForOutput()));
                     break;
 
                 case 'hidden':
                     $myts = MyTextSanitizer::getInstance();
-                    $ele  = new XoopsFormHidden($config[$i]->getVar('conf_name'), $myts->htmlspecialchars($config[$i]->getConfValueForOutput()));
+                    $ele  = new XoopsFormHidden($config[$i]->getVar('conf_name'), $myts->htmlSpecialChars($config[$i]->getConfValueForOutput()));
                     break;
 
                 case 'textbox':
                 default:
                     $myts = MyTextSanitizer::getInstance();
-                    $ele  = new XoopsFormText($title, $config[$i]->getVar('conf_name'), 50, 255, $myts->htmlspecialchars($config[$i]->getConfValueForOutput()));
+                    $ele  = new XoopsFormText($title, $config[$i]->getVar('conf_name'), 50, 255, $myts->htmlSpecialChars($config[$i]->getConfValueForOutput()));
                     break;
 
             }
@@ -256,7 +256,7 @@ switch ($op) {
 
     case 'showmod':
 
-        /* @var $config_handler XoopsConfigHandler  */
+        /* @var XoopsConfigHandler $config_handler */
         $config_handler = xoops_getHandler('config');
         $mod            = isset($_REQUEST['mod']) ? (int)$_REQUEST['mod'] : 0;
         if ($mod <= 0) {
@@ -288,7 +288,7 @@ switch ($op) {
         $modname = $module->getVar('name');
         if (!empty($_REQUEST['redirect'])) {
             $myts = MyTextSanitizer::getInstance();
-            $form->addElement(new XoopsFormHidden('redirect', $myts->htmlspecialchars($_REQUEST['redirect'])));
+            $form->addElement(new XoopsFormHidden('redirect', $myts->htmlSpecialChars($_REQUEST['redirect'])));
         } elseif ($module->getInfo('adminindex')) {
             $form->addElement(new XoopsFormHidden('redirect', XOOPS_URL . '/modules/' . $module->getVar('dirname') . '/' . $module->getInfo('adminindex')));
         }
@@ -301,9 +301,9 @@ switch ($op) {
                     $myts = MyTextSanitizer::getInstance();
                     if ($config[$i]->getVar('conf_valuetype') === 'array') {
                         // this is exceptional.. only when value type is arrayneed a smarter way for this
-                        $ele = ($config[$i]->getVar('conf_value') != '') ? new XoopsFormTextArea($title, $config[$i]->getVar('conf_name'), $myts->htmlspecialchars(implode('|', $config[$i]->getConfValueForOutput())), 5, 50) : new XoopsFormTextArea($title, $config[$i]->getVar('conf_name'), '', 5, 50);
+                        $ele = ($config[$i]->getVar('conf_value') != '') ? new XoopsFormTextArea($title, $config[$i]->getVar('conf_name'), $myts->htmlSpecialChars(implode('|', $config[$i]->getConfValueForOutput())), 5, 50) : new XoopsFormTextArea($title, $config[$i]->getVar('conf_name'), '', 5, 50);
                     } else {
-                        $ele = new XoopsFormTextArea($title, $config[$i]->getVar('conf_name'), $myts->htmlspecialchars($config[$i]->getConfValueForOutput()), 5, 50);
+                        $ele = new XoopsFormTextArea($title, $config[$i]->getVar('conf_name'), $myts->htmlSpecialChars($config[$i]->getConfValueForOutput()), 5, 50);
                     }
                     break;
 
@@ -356,28 +356,28 @@ switch ($op) {
 
                 case 'password':
                     $myts = MyTextSanitizer::getInstance();
-                    $ele  = new XoopsFormPassword($title, $config[$i]->getVar('conf_name'), 50, 255, $myts->htmlspecialchars($config[$i]->getConfValueForOutput()));
+                    $ele  = new XoopsFormPassword($title, $config[$i]->getVar('conf_name'), 50, 255, $myts->htmlSpecialChars($config[$i]->getConfValueForOutput()));
                     break;
 
                 case 'color':
                     $myts = MyTextSanitizer::getInstance();
-                    $ele  = new XoopsFormColorPicker($title, $config[$i]->getVar('conf_name'), $myts->htmlspecialchars($config[$i]->getConfValueForOutput()));
+                    $ele  = new XoopsFormColorPicker($title, $config[$i]->getVar('conf_name'), $myts->htmlSpecialChars($config[$i]->getConfValueForOutput()));
                     break;
 
                 case 'hidden':
                     $myts = MyTextSanitizer::getInstance();
-                    $ele  = new XoopsFormHidden($config[$i]->getVar('conf_name'), $myts->htmlspecialchars($config[$i]->getConfValueForOutput()));
+                    $ele  = new XoopsFormHidden($config[$i]->getVar('conf_name'), $myts->htmlSpecialChars($config[$i]->getConfValueForOutput()));
                     break;
 
                 case 'line_break':
                     $myts = MyTextSanitizer::getInstance();
-                    $form->insertBreak('<div style="text-align:center">' . $title . '</div>', $myts->htmlspecialchars($config[$i]->getConfValueForOutput()));
+                    $form->insertBreak('<div style="text-align:center">' . $title . '</div>', $myts->htmlSpecialChars($config[$i]->getConfValueForOutput()));
                     break;
 
                 case 'textbox':
                 default:
                     $myts = MyTextSanitizer::getInstance();
-                    $ele  = new XoopsFormText($title, $config[$i]->getVar('conf_name'), 50, 255, $myts->htmlspecialchars($config[$i]->getConfValueForOutput()));
+                    $ele  = new XoopsFormText($title, $config[$i]->getVar('conf_name'), 50, 255, $myts->htmlSpecialChars($config[$i]->getConfValueForOutput()));
                     break;
 
             }
@@ -430,7 +430,7 @@ switch ($op) {
 
                     // if default theme has been changed
                     if (!$theme_updated && $config->getVar('conf_catid') == XOOPS_CONF && $config->getVar('conf_name') === 'theme_set') {
-                        /* @var $member_handler XoopsMemberHandler */
+                        /* @var XoopsMemberHandler $member_handler */
                         $member_handler = xoops_getHandler('member');
                         $member_handler->updateUsersByField('theme', ${$config->getVar('conf_name')});
                         $theme_updated = true;
@@ -481,10 +481,10 @@ switch ($op) {
 
                     // add read permission for the start module to all groups
                     if (!$startmod_updated && $new_value != '--' && $config->getVar('conf_catid') == XOOPS_CONF && $config->getVar('conf_name') === 'startpage') {
-                        /* @var $member_handler XoopsMemberHandler */
+                        /* @var XoopsMemberHandler $member_handler */
                         $member_handler     = xoops_getHandler('member');
                         $groups             = $member_handler->getGroupList();
-                        /* @var $moduleperm_handler XoopsGroupPermHandler  */
+                        /* @var XoopsGroupPermHandler $moduleperm_handler */
                         $moduleperm_handler = xoops_getHandler('groupperm');
                         $module_handler     = xoops_getHandler('module');
                         $module             = $module_handler->getByDirname($new_value);

@@ -38,7 +38,7 @@ class XoopsUserUtility
         global $xoopsConfigUser, $xoopsConfig;
 
         if (empty($xoopsConfigUser)) {
-            /* @var $config_handler XoopsConfigHandler  */
+            /* @var XoopsConfigHandler $config_handler */
             $config_handler  = xoops_getHandler('config');
             $xoopsConfigUser = $config_handler->getConfigsByCat(XOOPS_CONF_USER);
         }
@@ -47,7 +47,7 @@ class XoopsUserUtility
         }
 
         if (!empty($user) && !is_object($user)) {
-            /* @var $member_handler XoopsMemberHandler */
+            /* @var XoopsMemberHandler $member_handler */
             $member_handler = xoops_getHandler('member');
             $user           = $member_handler->getUser($user);
         }
@@ -115,7 +115,7 @@ class XoopsUserUtility
             $uname = $user->getVar('uname', 'n');
             $email = $user->getVar('email', 'n');
         }
-        /* @var $config_handler XoopsConfigHandler  */
+        /* @var XoopsConfigHandler $config_handler */
         $config_handler  = xoops_getHandler('config');
         $xoopsConfigUser = $config_handler->getConfigsByCat(XOOPS_CONF_USER);
 
@@ -276,7 +276,7 @@ class XoopsUserUtility
             if (!$result = $xoopsDB->query($sql)) {
                 return $users;
             }
-            while ($row = $xoopsDB->fetchArray($result)) {
+            while (false !== ($row = $xoopsDB->fetchArray($result))) {
                 $uid = $row['uid'];
                 if ($usereal && $row['name']) {
                     $users[$uid] = $myts->htmlSpecialChars($row['name']);
@@ -309,7 +309,7 @@ class XoopsUserUtility
         $userid   = (int)$userid;
         $username = '';
         if ($userid > 0) {
-            /* @var $member_handler XoopsMemberHandler */
+            /* @var XoopsMemberHandler $member_handler */
             $member_handler = xoops_getHandler('member');
             $user           = $member_handler->getUser($userid);
             if (is_object($user)) {

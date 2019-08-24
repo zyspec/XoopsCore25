@@ -15,7 +15,7 @@
  * @since               2.3.0
  * @author              Taiwen Jiang <phppp@users.sourceforge.net>
  */
-/* @var  $xoopsUser XoopsUser */
+/* @var  XoopsUser $xoopsUser */
 
 include_once dirname(__DIR__) . '/mainfile.php';
 
@@ -110,7 +110,7 @@ class XoopsRankHandler extends XoopsObjectHandler
 
             return $ret;
         }
-        while ($row = $this->db->fetchArray($result)) {
+        while (false !== ($row = $this->db->fetchArray($result))) {
             $object->assignVars($row);
         }
 
@@ -133,7 +133,7 @@ class XoopsRankHandler extends XoopsObjectHandler
         }
 
         $sql = 'SELECT rank_id, rank_title FROM ' . $this->db->prefix('ranks');
-        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
+        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
             $sql .= ' ' . $criteria->renderWhere();
             if ($criteria->getSort() != '') {
                 $sql .= ' ORDER BY ' . $criteria->getSort() . ' ' . $criteria->getOrder();
@@ -146,7 +146,7 @@ class XoopsRankHandler extends XoopsObjectHandler
             return $ret;
         }
         $myts = MyTextSanitizer::getInstance();
-        while ($myrow = $this->db->fetchArray($result)) {
+        while (false !== ($myrow = $this->db->fetchArray($result))) {
             $ret[$myrow['rank_id']] = $myts->htmlSpecialChars($myrow['rank_title']);
         }
 
@@ -231,7 +231,7 @@ class XoUserHandler extends XoopsObjectHandler
         } else {
             $sql = '    SELECT COUNT(DISTINCT u.uid) FROM ' . $this->db->prefix('users') . ' AS u' . '    LEFT JOIN ' . $this->db->prefix('groups_users_link') . ' AS g ON g.uid = u.uid' . '    WHERE g.groupid IN (' . implode(', ', array_map('intval', $groups)) . ')';
         }
-        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
+        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
             // Use the direct renderer, assuming no `uid` in criteria
             if ($render = $criteria->render()) {
                 $sql .= ' AND ' . $render;
@@ -264,7 +264,7 @@ class XoUserHandler extends XoopsObjectHandler
         } else {
             $sql = '    SELECT u.* FROM ' . $this->db->prefix('users') . ' AS u' . '    LEFT JOIN ' . $this->db->prefix('groups_users_link') . ' AS g ON g.uid = u.uid' . '    WHERE g.groupid IN (' . implode(', ', array_map('intval', $groups)) . ')';
         }
-        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
+        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
             if ($render = $criteria->render()) {
                 $sql .= ' AND ' . $render;
             }
@@ -280,7 +280,7 @@ class XoUserHandler extends XoopsObjectHandler
         }
         $result = $this->db->query($sql, $limit, $start);
         $ret    = array();
-        while ($myrow = $this->db->fetchArray($result)) {
+        while (false !== ($myrow = $this->db->fetchArray($result))) {
             $object = $this->create(false);
             $object->assignVars($myrow);
             $ret[$myrow['uid']] = $object;
@@ -369,7 +369,7 @@ if (empty($_POST['user_submit'])) {
                 3 => _MA_USER_LEVEL_DISABLED);
             $level_radio->addOptionArray($levels);
 
-            /* @var $member_handler XoopsMemberHandler */
+            /* @var XoopsMemberHandler $member_handler */
             $member_handler = xoops_getHandler('member');
             $groups         = $member_handler->getGroupList();
             $groups[0]      = _ALL;
@@ -571,10 +571,10 @@ if (empty($_POST['user_submit'])) {
         }
         $sql_count = 'SELECT COUNT(DISTINCT ' . (empty($alias) ? '' : $alias . '.') . 'uid) FROM ' . $subquery;
         $result    = $xoopsDB->query($sql_count);
-        list($total) = $xoopsDB->FetchRow($result);
+        list($total) = $xoopsDB->fetchRow($result);
         $result     = $xoopsDB->query($query, $limit, $start);
         $foundusers = array();
-        while ($myrow = $xoopsDB->fetchArray($result)) {
+        while (false !== ($myrow = $xoopsDB->fetchArray($result))) {
             $object = $user_handler->create(false);
             $object->assignVars($myrow);
             $foundusers[$myrow['uid']] = $object;

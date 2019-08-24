@@ -123,7 +123,7 @@ class XoopsGuiDefault extends XoopsSystemGui
         } else {
             $moddir  = $xoopsModule->getVar('dirname', 'n');
             $modpath = XOOPS_URL . '/modules/' . $moddir;
-            $modname = $xoopsModule->getVar('name');
+            $modname = $xoopsModule->getInfo('name') . '  (' . $xoopsModule->getInfo('version') . '  ' . $xoopsModule->getInfo('module_status') . ')';
             $modid   = $xoopsModule->getVar('mid');
 
             $mod_options = $xoopsModule->getAdminMenu();
@@ -142,7 +142,7 @@ class XoopsGuiDefault extends XoopsSystemGui
         $tpl->assign('moddir', $moddir);
 
         // add MODULES  Menu items
-        /* @var $module_handler XoopsModuleHandler */
+        /* @var XoopsModuleHandler $module_handler */
         $module_handler = xoops_getHandler('module');
         $criteria       = new CriteriaCompo();
         $criteria->add(new Criteria('hasadmin', 1));
@@ -151,7 +151,7 @@ class XoopsGuiDefault extends XoopsSystemGui
         $mods = $module_handler->getObjects($criteria);
 
         $menu               = array();
-        /* @var $moduleperm_handler XoopsGroupPermHandler  */
+        /* @var XoopsGroupPermHandler $moduleperm_handler */
         $moduleperm_handler = xoops_getHandler('groupperm');
         foreach ($mods as $mod) {
             $rtn        = array();

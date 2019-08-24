@@ -26,7 +26,7 @@
 include __DIR__ . '/mainfile.php';
 
 xoops_loadLanguage('search');
-/* @var $config_handler XoopsConfigHandler  */
+/* @var XoopsConfigHandler $config_handler */
 $config_handler    = xoops_getHandler('config');
 $xoopsConfigSearch = $config_handler->getConfigsByCat(XOOPS_CONF_SEARCH);
 
@@ -86,7 +86,7 @@ if ($action === 'results') {
 }
 $GLOBALS['xoopsOption']['template_main'] = 'system_search.tpl';
 $groups            = is_object($xoopsUser) ? $xoopsUser->getGroups() : XOOPS_GROUP_ANONYMOUS;
-/* @var  $gperm_handler XoopsGroupPermHandler */
+/* @var  XoopsGroupPermHandler $gperm_handler */
 $gperm_handler     = xoops_getHandler('groupperm');
 $available_modules = $gperm_handler->getItemIds('module_read', $groups);
 if ($action === 'search') {
@@ -126,7 +126,7 @@ if ($action !== 'showallbyuser') {
 }
 switch ($action) {
     case 'results':
-        /* @var $module_handler XoopsModuleHandler  */
+        /* @var XoopsModuleHandler $module_handler */
         $module_handler = xoops_getHandler('module');
         $criteria       = new CriteriaCompo(new Criteria('hassearch', 1));
         $criteria->add(new Criteria('isactive', 1));
@@ -181,7 +181,7 @@ switch ($action) {
                             $results[$i]['link'] = 'modules/' . $module->getVar('dirname') . '/' . $results[$i]['link']; 
                         }
 						$results_arr[$i]['link'] = $results[$i]['link'];
-						$results_arr[$i]['link_title'] = $myts->htmlspecialchars($results[$i]['title']);
+						$results_arr[$i]['link_title'] = $myts->htmlSpecialChars($results[$i]['title']);
 						
                         $results[$i]['uid'] = @(int)$results[$i]['uid'];
                         if (!empty($results[$i]['uid'])) {
@@ -218,7 +218,7 @@ switch ($action) {
     case 'showallbyuser':
         include $GLOBALS['xoops']->path('header.php');
 		$xoopsTpl->assign('showallbyuser', true);
-    /* @var $module_handler XoopsModuleHandler  */
+    /* @var XoopsModuleHandler $module_handler */
 		$module_handler = xoops_getHandler('module');
         $module         = $module_handler->get($mid);
         $results        = $module->search($queries, $andor, 20, $start, $uid);
@@ -256,7 +256,7 @@ switch ($action) {
                     $results[$i]['link'] = 'modules/' . $module->getVar('dirname') . '/' . $results[$i]['link'];
                 }
 				$results_arr['link'] = $results[$i]['link'];
-				$results_arr['link_title'] = $myts->htmlspecialchars($results[$i]['title']);
+				$results_arr['link_title'] = $myts->htmlSpecialChars($results[$i]['title']);
                 $results['uid'] = @(int)$results[$i]['uid'];
                 if (!empty($results[$i]['uid'])) {
                     $uname = XoopsUser::getUnameFromId($results[$i]['uid']);

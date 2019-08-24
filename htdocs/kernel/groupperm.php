@@ -247,7 +247,7 @@ class XoopsGroupPermHandler extends XoopsObjectHandler
         $ret   = array();
         $limit = $start = 0;
         $sql   = 'SELECT * FROM ' . $this->db->prefix('group_permission');
-        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
+        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
             $sql .= ' ' . $criteria->renderWhere();
             $limit = $criteria->getLimit();
             $start = $criteria->getStart();
@@ -256,7 +256,7 @@ class XoopsGroupPermHandler extends XoopsObjectHandler
         if (!$result) {
             return $ret;
         }
-        while ($myrow = $this->db->fetchArray($result)) {
+        while (false !== ($myrow = $this->db->fetchArray($result))) {
             $perm = new XoopsGroupPerm();
             $perm->assignVars($myrow);
             if (!$id_as_key) {
@@ -280,7 +280,7 @@ class XoopsGroupPermHandler extends XoopsObjectHandler
     public function getCount(CriteriaElement $criteria = null)
     {
         $sql = 'SELECT COUNT(*) FROM ' . $this->db->prefix('group_permission');
-        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
+        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
             $sql .= ' ' . $criteria->renderWhere();
         }
         $result = $this->db->query($sql);
@@ -302,7 +302,7 @@ class XoopsGroupPermHandler extends XoopsObjectHandler
     public function deleteAll(CriteriaElement $criteria = null)
     {
         $sql = sprintf('DELETE FROM %s', $this->db->prefix('group_permission'));
-        if (isset($criteria) && is_subclass_of($criteria, 'criteriaelement')) {
+        if (isset($criteria) && is_subclass_of($criteria, 'CriteriaElement')) {
             $sql .= ' ' . $criteria->renderWhere();
         }
         if (!$result = $this->db->query($sql)) {
@@ -403,7 +403,7 @@ class XoopsGroupPermHandler extends XoopsObjectHandler
      */
     public function addRight($gperm_name, $gperm_itemid, $gperm_groupid, $gperm_modid = 1)
     {
-        /* @var $perm XoopsGroupPerm */
+        /* @var XoopsGroupPerm $perm */
         $perm = $this->create();
         $perm->setVar('gperm_name', $gperm_name);
         $perm->setVar('gperm_groupid', $gperm_groupid);
