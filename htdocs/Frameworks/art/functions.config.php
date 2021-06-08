@@ -3,7 +3,7 @@
  * Functions handling module configs
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @author              Taiwen Jiang <phppp@users.sourceforge.net>
  * @since               1.00
  * @package             Frameworks
@@ -70,6 +70,7 @@ if (!defined('FRAMEWORKS_ART_FUNCTIONS_CONFIG')):
             return null;
         }
 
+        /** @var \XoopsModuleHandler $module_handler */
         $module_handler = xoops_getHandler('module');
         if (!$module = $module_handler->getByDirname($dirname)) {
             trigger_error("Module '{$dirname}' does not exist", E_USER_WARNING);

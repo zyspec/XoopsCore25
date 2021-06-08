@@ -10,7 +10,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package             profile
  * @since               2.3.0
  * @author              Jan Pedersen
@@ -187,13 +187,9 @@ class ProfileField extends XoopsObject
                 $element = new XoopsFormDatetime($caption, $name, 15, $value);
                 break;
 
-            case 'list':
-                $element = new XoopsFormSelectList($caption, $name, $value, 1, $options[0]);
-                break;
-
             case 'timezone':
                 $element = new XoopsFormSelectTimezone($caption, $name, $value);
-                $element->setExtra("style='width: 280px;'");
+                //$element->setExtra("style='width: 280px;'");
                 break;
 
             case 'rank':
@@ -226,11 +222,7 @@ class ProfileField extends XoopsObject
      **/
     public function getOutputValue(&$user, $profile)
     {
-        if (file_exists($file = $GLOBALS['xoops']->path('modules/profile/language/' . $GLOBALS['xoopsConfig']['language'] . '/modinfo.php'))) {
-            include_once $file;
-        } else {
-            include_once $GLOBALS['xoops']->path('modules/profile/language/english/modinfo.php');
-        }
+        xoops_loadLanguage('modinfo', 'profile');
 
         $value = in_array($this->getVar('field_name'), $this->getUserVars()) ? $user->getVar($this->getVar('field_name')) : $profile->getVar($this->getVar('field_name'));
 
@@ -248,7 +240,6 @@ class ProfileField extends XoopsObject
             case 'dhtml':
             case 'theme':
             case 'language':
-            case 'list':
                 return $value;
                 break;
 
@@ -371,7 +362,6 @@ class ProfileField extends XoopsObject
             case 'timezone':
             case 'theme':
             case 'language':
-            case 'list':
             case 'select':
             case 'radio':
             case 'select_multi':

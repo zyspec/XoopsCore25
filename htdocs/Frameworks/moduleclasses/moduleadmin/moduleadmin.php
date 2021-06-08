@@ -12,7 +12,7 @@
  *
  * @copyright       Grégory Mage (Aka Mage)
  * @copyright   (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license         GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license         GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @author          Grégory Mage (Aka Mage)
  */
 class ModuleAdmin
@@ -331,8 +331,7 @@ class ModuleAdmin
             // Database version
             $path    = XOOPS_URL . '/Frameworks/moduleclasses/icons/16/';
             $dbarray = $this->_obj->getInfo('min_db');
-
-            if ($dbarray[XOOPS_DB_TYPE]) {
+            if ($dbarray!=false) {
                 // changes from redheadedrod to use connector specific version info
                 switch (XOOPS_DB_TYPE) {
                     // server should be the same in both cases

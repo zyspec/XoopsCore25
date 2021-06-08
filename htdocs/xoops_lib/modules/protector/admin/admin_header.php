@@ -10,7 +10,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package             pm
  * @since               2.3.0
  * @author              Taiwen Jiang <phppp@users.sourceforge.net>
@@ -19,8 +19,10 @@
 //include_once dirname(dirname(dirname(__DIR__))) . '/mainfile.php';
 include_once XOOPS_ROOT_PATH . '/mainfile.php';
 
-//include_once XOOPS_ROOT_PATH . '/include/cp_functions.php';
-include '../../../include/cp_header.php';
+include_once XOOPS_ROOT_PATH . '/include/cp_header.php';
+include_once XOOPS_ROOT_PATH . '/include/cp_functions.php';
+
+//include '../../../include/cp_header.php';
 //require_once XOOPS_ROOT_PATH . '/modules/' . $GLOBALS['xoopsModule']->getVar('dirname') . '/include/functions.php';
 
 if (file_exists($GLOBALS['xoops']->path('/Frameworks/moduleclasses/moduleadmin/moduleadmin.php'))) {

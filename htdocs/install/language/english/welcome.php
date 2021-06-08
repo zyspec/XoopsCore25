@@ -12,15 +12,15 @@ $content .= '
 </p>
 <p>
     XOOPS is released under the terms of the
-    <a href="http://www.gnu.org/licenses/gpl-2.0.html" rel="external">GNU General Public License (GPL)</a>
+    <a href="https://www.gnu.org/licenses/gpl-2.0.html" rel="external">GNU General Public License (GPL)</a>
     version 2 or greater, and is free to use and modify.
     It is free to redistribute as long as you abide by the distribution terms of the GPL.
 </p>
 <h3>Requirements</h3>
 <ul>
-    <li>WWW Server (<a href="http://www.apache.org/" rel="external">Apache</a>, <a href="https://www.nginx.com/" rel="external">NGINX</a>, IIS, etc)</li>
-    <li><a href="http://www.php.net/" rel="external">PHP</a> 5.3.9 or higher, 7.1+ recommended</li>
-    <li><a href="http://www.mysql.com/" rel="external">MySQL</a> 5.5 or higher, 5.6+ recommended </li>
+    <li>WWW Server (<a href="https://www.apache.org/" rel="external">Apache</a>, <a href="https://www.nginx.com/" rel="external">NGINX</a>, IIS, etc)</li>
+    <li><a href="https://www.php.net/" rel="external">PHP</a> 5.3.9 or higher, 7.3+ recommended</li>
+    <li><a href="https://www.mysql.com/" rel="external">MySQL</a> 5.5 or higher, 5.7+ recommended </li>
 </ul>
 <h3>Before you install</h3>
 <ol>
@@ -34,16 +34,16 @@ $content .= '
 </ol>
 <h3>Special Notes</h3>
 <p>Some specific system software combinations may require some additional configurations to work
- with XOOPS. If any of these topics apply to your environment, please see the full 
- <a href="https://xoops.gitbook.io/xoops-install-upgrade/" class="external">XOOPS 
- installation manual</a> for more information. 
+ with XOOPS. If any of these topics apply to your environment, please see the full
+ <a href="https://xoops.gitbook.io/xoops-install-upgrade/" rel="external">XOOPS
+ installation manual</a> for more information.
 </p>
-<p>MySQL 8.0 is not supported in all PHP versions. Even in the supported versions, issues with the 
- PHP <em>mysqlnd</em> library may require the MySQL server&apos;s <em>default-authentication-plugin</em> 
+<p>MySQL 8.0 is not supported in all PHP versions. Even in the supported versions, issues with the
+ PHP <em>mysqlnd</em> library may require the MySQL server&apos;s <em>default-authentication-plugin</em>
  to be set to <em>mysql_native_password</em> to function correctly.
 </p>
 <p>SELinux enabled systems (such as CentOS and RHEL) may require changes to the security context
- for XOOPS directories in addition to the normal file permissions to make directories writable. 
+ for XOOPS directories in addition to the normal file permissions to make directories writable.
  Consult your system documentation and/or systems administrator.
 </p>
 ';

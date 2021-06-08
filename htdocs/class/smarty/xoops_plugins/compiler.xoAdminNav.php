@@ -12,7 +12,7 @@
  * xoAdminNav Smarty compiler plug-in
  *
  * @copyright    (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license          GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license          GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @author           Andricq Nicolas (AKA MusS)
  * @since            2.5
  * @param $argStr
@@ -29,11 +29,11 @@ function smarty_compiler_xoAdminNav($argStr, &$smarty)
         $icons = 'default';
     }
 
-    if (file_exists($xoops->path('modules/system/images/breadcrumb/' . $icons . '/index.html'))) {
+    if (file_exists($xoops->path('modules/system/images/breadcrumb/' . $icons . '/index.php'))) {
         $url = $xoops->url('modules/system/images/breadcrumb/' . $icons . '/' . $argStr);
     } else {
         if (file_exists($xoops->path('modules/system/images/breadcrumb/default/' . $argStr))) {
-            $url = $xoops->url('modules/system/images/icons/default/' . $argStr);
+            $url = $xoops->url('modules/system/images/breadcrumb/default/' . $argStr);
         }
     }
 

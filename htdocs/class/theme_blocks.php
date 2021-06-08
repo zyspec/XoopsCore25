@@ -10,7 +10,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @author              Skalpa Keo <skalpa@xoops.org>
  * @since               2.3.0
  * @package             kernel
@@ -170,6 +170,11 @@ class xos_logos_PageBuilder
             // 'name'        => strtolower( preg_replace( '/[^0-9a-zA-Z_]/', '', str_replace( ' ', '_', $xobject->getVar( 'name' ) ) ) ),
             'weight'  => $xobject->getVar('weight'),
             'lastmod' => $xobject->getVar('last_modified'));
+
+        // title is a comment, don't show it
+        if (0 === strpos($block['title'], '// ')) {
+            $block['title'] = '';
+        }
 
         $bcachetime = (int)$xobject->getVar('bcachetime');
         if (empty($bcachetime)) {

@@ -10,7 +10,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package             class
  * @subpackage          cache
  * @since               2.3.0
@@ -102,7 +102,7 @@ class XoopsCache
      *
      * @param  string|array $name     Name of the configuration
      * @param  array  $settings Optional associative array of settings passed to the engine
-     * @return array  (engine, settings) on success, false on failure
+     * @return array|false  (engine, settings) on success, false on failure
      * @access public
      */
     public function config($name = 'default', $settings = array())
@@ -409,7 +409,7 @@ class XoopsCacheEngine
     /**
      * settings of current engine instance
      *
-     * @var int
+     * @var array
      * @access public
      */
     public $settings;

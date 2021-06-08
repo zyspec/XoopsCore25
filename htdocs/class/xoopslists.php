@@ -10,7 +10,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package             kernel
  * @since               2.0.0
  */
@@ -646,6 +646,7 @@ if (!defined('XOOPS_LISTS_INCLUDED')) {
          */
         public static function getUserRankList()
         {
+            /** @var \XoopsMySQLDatabase $db */
             $db     = XoopsDatabaseFactory::getDatabaseConnection();
             $myts   = MyTextSanitizer::getInstance();
             $sql    = sprintf('SELECT rank_id, rank_title FROM ' . $db->prefix('ranks') . ' WHERE rank_special = %u', 1);

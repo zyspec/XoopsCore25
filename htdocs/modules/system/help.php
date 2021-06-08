@@ -10,16 +10,17 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @author              Andricq Nicolas (AKA MusS)
  */
 /* @var XoopsModule $module */
+use Xmf\Request;
 
 // Include header
 include __DIR__ . '/header.php';
 
-$page = system_CleanVars($_REQUEST, 'page', '', 'string');
-$mid  = system_CleanVars($_REQUEST, 'mid', 0, 'int');
+$page = Request::getString('page', '');
+$mid  = Request::getInt('mid', 0);
 
 // Define main template
 $GLOBALS['xoopsOption']['template_main'] = 'system_help.tpl';

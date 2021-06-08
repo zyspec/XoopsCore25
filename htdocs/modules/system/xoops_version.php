@@ -11,14 +11,14 @@
 
 /**
  * @copyright    XOOPS Project http://xoops.org/
- * @license      GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license      GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package
  * @since
  * @author       XOOPS Development Team, Kazumi Ono (AKA onokazu)
  */
 
 $modversion['name']        = _MI_SYSTEM_NAME;
-$modversion['version']     = 2.14; // irmtfan bug fix: bug fix: remove codes for delete templates
+$modversion['version']     = 2.16; // irmtfan bug fix: bug fix: remove codes for delete templates
 $modversion['description'] = _MI_SYSTEM_DESC;
 $modversion['author']      = '';
 $modversion['credits']     = 'The XOOPS Project; MusS, Kraven30, Mage';
@@ -60,6 +60,13 @@ $modversion['templates'][] = array('file' => 'system_search.tpl', 'description' 
 $modversion['templates'][] = array('file' => 'system_popup_header.tpl', 'description' => '');
 $modversion['templates'][] = array('file' => 'system_popup_footer.tpl', 'description' => '');
 $modversion['templates'][] = array('file' => 'system_trigger_uploads.tpl', 'description' => '');
+$modversion['templates'][] = array('file' => 'system_confirm.tpl', 'description' => '');
+$modversion['templates'][] = array('file' => 'system_pagenav.tpl', 'description' => '');
+$modversion['templates'][] = array('file' => 'system_misc_avatars.tpl', 'description' => '');
+$modversion['templates'][] = array('file' => 'system_misc_friend.tpl', 'description' => '');
+$modversion['templates'][] = array('file' => 'system_misc_online.tpl', 'description' => '');
+$modversion['templates'][] = array('file' => 'system_misc_smilies.tpl', 'description' => '');
+
 
 //in transition to .tpl, we keep the .html extension versions for previously existing templates
 
@@ -197,7 +204,7 @@ $modversion['blocks'][12]['template']    = 'system_block_themes.tpl';
 // Menu
 $modversion['hasMain'] = 0;
 
-// Préférences
+// Preferences
 $i                                       = 0;
 $modversion['config'][$i]['name']        = 'break1';
 $modversion['config'][$i]['title']       = '_MI_SYSTEM_PREFERENCE_BREAK_GENERAL';

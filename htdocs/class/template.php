@@ -9,8 +9,8 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @copyright       (c) 2000-2021 XOOPS Project (https://xoops.org)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @author              Kazumi Ono <onokazu@xoops.org>
  * @author              Skalpa Keo <skalpa@xoops.org>
  * @author              Taiwen Jiang <phppp@users.sourceforge.net>
@@ -25,13 +25,15 @@ defined('XOOPS_ROOT_PATH') || exit('Restricted access');
 define('SMARTY_DIR', XOOPS_ROOT_PATH . '/class/smarty/');
 require_once SMARTY_DIR . 'Smarty.class.php';
 
+xoops_loadLanguage('global');
+
 /**
  * Template engine
  *
  * @package             kernel
  * @subpackage          core
  * @author              Kazumi Ono <onokazu@xoops.org>
- * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
+ * @copyright       (c) 2000-2021 XOOPS Project (https://xoops.org)
  */
 class XoopsTpl extends Smarty
 {
@@ -53,6 +55,7 @@ class XoopsTpl extends Smarty
             XOOPS_ROOT_PATH . '/class/smarty/plugins');
         if ($xoopsConfig['debug_mode']) {
             $this->debugging_ctrl = 'URL';
+            $this->debug_tpl = XOOPS_ROOT_PATH . '/class/smarty/xoops_tpl/debug.tpl';
             if ($xoopsConfig['debug_mode'] == 3) {
                 $this->debugging = true;
             }
@@ -66,6 +69,8 @@ class XoopsTpl extends Smarty
                           'xoops_charset'    => _CHARSET,
                           'xoops_version'    => XOOPS_VERSION,
                           'xoops_upload_url' => XOOPS_UPLOAD_URL));
+        $xoopsPreload = XoopsPreload::getInstance();
+        $xoopsPreload->triggerEvent('core.class.template.new', array($this));
     }
 
     /**
@@ -145,6 +150,10 @@ class XoopsTpl extends Smarty
 
         $template_set      = empty($template_set) ? $xoopsConfig['template_set'] : $template_set;
         $theme_set         = empty($theme_set) ? $xoopsConfig['theme_set'] : $theme_set;
+        if (class_exists('XoopsSystemCpanel', false)) {
+            $cPrefix = 'cp-';
+            $theme_set =  isset($xoopsConfig['cpanel']) ? $cPrefix .$xoopsConfig['cpanel'] : $cPrefix . 'default';
+        }
         $module_dirname    = empty($module_dirname) ? (empty($GLOBALS['xoopsModule']) ? 'system' : $GLOBALS['xoopsModule']->getVar('dirname', 'n')) : $module_dirname;
         $this->compile_id  = substr(md5(XOOPS_URL), 0, 8) . '-' . $module_dirname . '-' . $theme_set . '-' . $template_set;
         $this->_compile_id = $this->compile_id;

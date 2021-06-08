@@ -10,7 +10,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package             profile
  * @since               2.3.0
  * @author              Jan Pedersen
@@ -24,7 +24,7 @@
  */
 $modversion                   = array();
 $modversion['name']           = _PROFILE_MI_NAME;
-$modversion['version']        = 1.90;
+$modversion['version']        = 1.91;
 $modversion['description']    = _PROFILE_MI_DESC;
 $modversion['author']         = 'Jan Pedersen, Taiwen Jiang, alfred, Wishcraft';
 $modversion['credits']        = 'Ackbarr, mboyden, marco, mamba, trabis, etc.';

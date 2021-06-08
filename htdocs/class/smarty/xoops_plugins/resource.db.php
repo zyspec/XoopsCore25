@@ -11,8 +11,8 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @copyright       (c) 2000-2021 XOOPS Project (https://xoops.org)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @param $tpl_name
  * @param $tpl_source
  * @param $smarty
@@ -92,6 +92,7 @@ function smarty_resource_db_tplinfo($tpl_name)
     }
     $tplset          = $xoopsConfig['template_set'];
     $theme           = isset($xoopsConfig['theme_set']) ? $xoopsConfig['theme_set'] : 'default';
+    /** @var \XoopsTplfileHandler $tplfile_handler */
     $tplfile_handler = xoops_getHandler('tplfile');
     // If we're not using the "default" template set, then get the templates from the DB
     if ($tplset !== 'default') {
@@ -100,7 +101,7 @@ function smarty_resource_db_tplinfo($tpl_name)
             return $cache[$tpl_name] = $tplobj[0];
         }
     }
-    // If we'using the default tplset, get the template from the filesystem
+    // If we're using the default tplset, get the template from the filesystem
     $tplobj = $tplfile_handler->find('default', null, null, null, $tpl_name, true);
 
     if (!count($tplobj)) {
@@ -114,6 +115,10 @@ function smarty_resource_db_tplinfo($tpl_name)
         case 'block':
             $directory = XOOPS_THEME_PATH;
             $path      = 'blocks/';
+            if (class_exists('XoopsSystemCpanel', false)) {
+                $directory = XOOPS_ADMINTHEME_PATH;
+                $theme     = isset($xoopsConfig['cpanel']) ? $xoopsConfig['cpanel'] : 'default';
+            }
             break;
         case 'admin':
             $theme     = isset($xoopsConfig['cpanel']) ? $xoopsConfig['cpanel'] : 'default';
@@ -121,8 +126,13 @@ function smarty_resource_db_tplinfo($tpl_name)
             $path      = 'admin/';
             break;
         default:
+            // at time of this comment, this only includes type 'module'
             $directory = XOOPS_THEME_PATH;
             $path      = '';
+            if (class_exists('XoopsSystemCpanel', false)) {
+                $directory = XOOPS_ADMINTHEME_PATH;
+                $theme     = isset($xoopsConfig['cpanel']) ? $xoopsConfig['cpanel'] : 'default';
+            }
             break;
     }
     // First, check for an overloaded version within the theme folder

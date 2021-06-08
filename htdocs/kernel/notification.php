@@ -10,7 +10,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package             kernel
  * @since               2.0.0
  * @author              Michael van Dam <mvandam@caltech.edu>
@@ -625,15 +625,15 @@ class XoopsNotificationHandler extends XoopsObjectHandler
     }
 
     /**
-     * Enter description here...
+     * Trigger a single notification event
      *
-     * @param  int   $category
-     * @param  int   $item_id
-     * @param  int   $event
-     * @param  array $extra_tags
-     * @param  array $user_list
-     * @param  int   $module_id
-     * @param  int   $omit_user_id
+     * @param  string $category
+     * @param  int    $item_id
+     * @param  string $event
+     * @param  array  $extra_tags
+     * @param  array  $user_list
+     * @param  int    $module_id
+     * @param  int    $omit_user_id
      * @return mixed
      */
     public function triggerEvent($category, $item_id, $event, $extra_tags = array(), $user_list = array(), $module_id = null, $omit_user_id = null)

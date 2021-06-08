@@ -53,7 +53,7 @@ class HTMLPurifier_Encoder
         } elseif ($code == self::ICONV_TRUNCATES) {
             // we can only work around this if the input character set
             // is utf-8
-            if ($in === 'utf-8') {
+            if ($in == 'utf-8') {
                 if ($max_chunk_size < 4) {
                     trigger_error('max_chunk_size is too small', E_USER_WARNING);
                     return false;
@@ -159,7 +159,7 @@ class HTMLPurifier_Encoder
 
         $len = strlen($str);
         for ($i = 0; $i < $len; $i++) {
-            $in = ord($str{$i});
+            $in = ord($str[$i]);
             $char .= $str[$i]; // append byte to char
             if (0 == $mState) {
                 // When mState is zero we expect either a US-ASCII character
@@ -412,7 +412,6 @@ class HTMLPurifier_Encoder
                 E_USER_ERROR
             );
         }
-        return null;
     }
 
     /**
@@ -460,7 +459,6 @@ class HTMLPurifier_Encoder
         // might be OK, however, this is *not* universally true over all
         // encodings.  So we take the conservative route here, rather
         // than forcibly turn on %Core.EscapeNonASCIICharacters
-        return null;
     }
 
     /**

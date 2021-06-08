@@ -10,7 +10,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package             class
  * @subpackage          CAPTCHA
  * @since               2.3.0
@@ -60,7 +60,7 @@ class XoopsCaptchaText extends XoopsCaptchaMethod
      */
     public function loadText()
     {
-        return '<span style="font-style: normal; font-weight: bold; font-size: 100%; color: #333; border: 1px solid #333; padding: 1px 5px;">' . $this->outputText . '</span>';
+        return '<span class="captchatext">' . $this->outputText . '</span>';
     }
 
     protected function buildQuestion()

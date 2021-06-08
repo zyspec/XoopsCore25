@@ -11,11 +11,12 @@
 
 /**
  * @copyright    XOOPS Project http://xoops.org/
- * @license      GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license      GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package
  * @since
  * @author       XOOPS Development Team, Kazumi Ono (AKA onokazu)
  */
+use Xmf\Request;
 
 // Check users rights
 if (!is_object($xoopsUser) || !is_object($xoopsModule) || !$xoopsUser->isAdmin($xoopsModule->getVar('mid'))) {
@@ -28,9 +29,9 @@ if (isset($_REQUEST)) {
     }
 }
 // Get Action type
-$op = system_CleanVars($_REQUEST, 'op', 'default', 'string');
+$op = Request::getString('op', 'default');
 // Setting type
-$confcat_id = system_CleanVars($_REQUEST, 'confcat_id', 0, 'int');
+$confcat_id = Request::getInt('confcat_id', 0);
 // Define main template
 $GLOBALS['xoopsOption']['template_main'] = 'system_preferences.tpl';
 // Call Header
@@ -504,7 +505,7 @@ switch ($op) {
         }
 
         if (!empty($use_mysession) && $xoopsConfig['use_mysession'] == 0 && $session_name != '') {
-            setcookie($session_name, session_id(), time() + (60 * (int)$session_expire), '/', XOOPS_COOKIE_DOMAIN, 0);
+            xoops_setcookie($session_name, session_id(), time() + (60 * (int)$session_expire), '/', XOOPS_COOKIE_DOMAIN, 0);
         }
 
         // Clean cached files, may take long time

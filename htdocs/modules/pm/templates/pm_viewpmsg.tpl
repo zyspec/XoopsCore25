@@ -1,8 +1,8 @@
 <h4 class="txtcenter"><{$smarty.const._PM_PRIVATEMESSAGE}></h4>
-<{if $op}>
+ <{if $op|default:''}>
     <br>
     <div class="floatright txtright" style="width: 18%;">
-        <{if $op == "out"}>
+        <{if $op|default:'' == "out"}>
             <a href='viewpmsg.php?op=in' title='<{$smarty.const._PM_INBOX}>'><{$smarty.const._PM_INBOX}></a>
             |
             <a href='viewpmsg.php?op=save' title='<{$smarty.const._PM_SAVEBOX}>'><{$smarty.const._PM_SAVEBOX}></a>
@@ -17,20 +17,20 @@
         <{/if}>
     </div>
     <div class="floatleft width80">
-        <{if $op == "out"}><{$smarty.const._PM_OUTBOX}>
+        <{if $op|default:'' == "out"}><{$smarty.const._PM_OUTBOX}>
         <{elseif $op == "save"}><{$smarty.const._PM_SAVEBOX}>
         <{else}><{$smarty.const._PM_INBOX}><{/if}>
     </div>
     <br>
     <br>
-    <{if $msg}>
+    <{if $msg|default:false}>
         <div class="confirmMsg"><{$msg}></div>
     <{/if}>
-    <{if $errormsg}>
+    <{if $errormsg|default:false}>
         <div class="errorMsg"><{$errormsg}></div>
     <{/if}>
 
-    <{if $pagenav}>
+    <{if $pagenav|default:false}>
         <div class="floatright txtright pad5">
             <{$pagenav}>
         </div>
@@ -43,7 +43,7 @@
                 <th><input name='allbox' id='allbox' onclick='xoopsCheckAll("<{$pmform.name}>", "allbox");' type='checkbox' value='Check All'/></th>
                 <th><img class='bnone' src='<{xoAppUrl images/download.gif}>' alt=''/></th>
                 <th>&nbsp;</th>
-                <{if $op == "out"}>
+                <{if $op|default:'' == "out"}>
                     <th><{$smarty.const._PM_TO}></th>
                 <{else}>
                     <th><{$smarty.const._PM_FROM}></th>
@@ -57,7 +57,7 @@
                     <td class='even txtcenter' colspan='6'><{$smarty.const._PM_YOUDONTHAVE}></td>
                 </tr>
             <{/if}>
-            <{foreach item=message from=$messages}>
+            <{foreach item=message from=$messages|default:null}>
                 <tr class='<{cycle values="odd, even"}> txtleft'>
                     <td class='aligntop txtcenter width2'>
                         <input type='checkbox' id='msg_id_<{$message.msg_id}>' name='msg_id[]' value='<{$message.msg_id}>'/>
@@ -106,7 +106,7 @@
             </tr>
         </table>
     </form>
-    <{if $pagenav}>
+    <{if $pagenav|default:false}>
         <div class="floatright txtright pad5">
             <{$pagenav}>
         </div>

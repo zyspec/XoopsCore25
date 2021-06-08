@@ -11,7 +11,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package             upgrader
  * @since               2.3.0
  * @author              Taiwen Jiang <phppp@users.sourceforge.net>
@@ -306,7 +306,7 @@ class Upgrade_220 extends XoopsUpgrade
               bcachetime int(10) unsigned NOT NULL default '0',
               last_modified int(10) unsigned NOT NULL default '0',
               PRIMARY KEY  (bid),
-              KEY mid (mid),
+              KEY `mid` (mid),
               KEY visible (visible),
               KEY isactive_visible_mid (isactive,visible,mid),
               KEY mid_funcnum (mid,func_num)

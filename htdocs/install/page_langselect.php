@@ -12,10 +12,10 @@
  * Installer language selection page
  *
  * See the enclosed file license.txt for licensing information.
- * If you did not receive this file, get it at http://www.gnu.org/licenses/gpl-2.0.html
+ * If you did not receive this file, get it at https://www.gnu.org/licenses/gpl-2.0.html
  *
  * @copyright    (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license          GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license          GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package          installer
  * @since            2.3.0
  * @author           Haruki Setoyama  <haruki@planewave.org>
@@ -29,17 +29,17 @@
 require_once './include/common.inc.php';
 defined('XOOPS_INSTALL') || die('XOOPS Installation wizard die');
 
-setcookie('xo_install_lang', 'english', null, null, null);
+xoops_setcookie('xo_install_lang', 'english', null, null, null);
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_REQUEST['lang'])) {
     $lang = $_REQUEST['lang'];
-    setcookie('xo_install_lang', $lang, null, null, null);
+    xoops_setcookie('xo_install_lang', $lang, null, null, null);
 
     $wizard->redirectToPage('+1');
     exit();
 }
 
 $_SESSION['settings'] = array();
-setcookie('xo_install_user', '', null, null, null);
+xoops_setcookie('xo_install_user', '', null, null, null);
 
 $pageHasForm = true;
 $title = LANGUAGE_SELECTION;

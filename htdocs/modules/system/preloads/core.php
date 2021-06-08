@@ -10,7 +10,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @author              Cointin Maxime (AKA Kraven30)
  * @author              Andricq Nicolas (AKA MusS)
  */
@@ -65,8 +65,15 @@ class SystemCorePreload extends XoopsPreloadItem
         }
 
         if (!empty($_SESSION['redirect_message'])) {
-            //$GLOBALS['xoTheme']->addStylesheet('xoops.css');
-            $GLOBALS['xoTheme']->addScript('browse.php?Frameworks/jquery/jquery.js');
+            /**
+             * Don't load jquery if already done by the theme
+             */
+            $GLOBALS['xoTheme']->addScript('', array('type' => 'text/javascript'), "
+                if (typeof jQuery == 'undefined') {
+                    var tag = '<scr' + 'ipt type=\'text/javascript\' src=\'" . XOOPS_URL . "/browse.php?Frameworks/jquery/jquery.js\'></scr' + 'ipt>';            	    
+                    document.write(tag);            	    
+	            };"
+            );
             $GLOBALS['xoTheme']->addScript('browse.php?Frameworks/jquery/plugins/jquery.jgrowl.js');
             $GLOBALS['xoTheme']->addScript('', array('type' => 'text/javascript'), '
             (function($){

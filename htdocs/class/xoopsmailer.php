@@ -10,7 +10,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package             kernel
  * @since               2.0.0
  * @author              Kazumi Ono (AKA onokazu) http://www.myweb.ne.jp/, http://jp.xoops.org/
@@ -341,6 +341,12 @@ class XoopsMailer
             $text    = str_replace('{X_UID}', $user->getVar('uid'), $this->body);
             $text    = str_replace('{X_UEMAIL}', $user->getVar('email'), $text);
             $text    = str_replace('{X_UNAME}', $user->getVar('uname'), $text);
+			if ($user->getVar('name') == ''){
+				$x_name = $user->getVar('uname');
+			} else {
+				$x_name = $user->getVar('name');
+			}
+            $text    = str_replace('{X_NAME}', $x_name, $text);
             $text    = str_replace('{X_UACTLINK}', XOOPS_URL . '/register.php?op=actv&id=' . $user->getVar('uid') . '&actkey=' . $user->getVar('actkey'), $text);
             // send mail
             if ($this->isMail) {

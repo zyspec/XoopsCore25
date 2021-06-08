@@ -10,7 +10,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package             pm
  * @since               2.3.0
  * @author              Jan Pedersen
@@ -68,7 +68,7 @@ if (is_object($pm) && !empty($_POST['action'])) {
                 }
                 if ($pm->getVar('from_userid') == $GLOBALS['xoopsUser']->getVar('uid')) {
                     if (!empty($_REQUEST['delete_message'])) {
-                        $res2 = $pm_handler->setFromDelete($pm);
+                        $res2 = $pm_handler->setFromdelete($pm);
                         $res2 = $res2 ? $pm_handler->setFromsave($pm, 0) : false;
                     } elseif (!empty($_REQUEST['move_message'])) {
                         $res2 = $pm_handler->setFromsave($pm, 0);

@@ -1,7 +1,7 @@
 <div>
     <h4><{$smarty.const._PM_PRIVATEMESSAGE}></h4>
 </div><br>
-<{if $op==out}>
+<{if $op=='out'}>
     <a href='viewpmsg.php?op=out' title='<{$smarty.const._PM_OUTBOX}>'><{$smarty.const._PM_OUTBOX}></a>
     &nbsp;
 <{elseif $op == "save"}>
@@ -12,14 +12,14 @@
     &nbsp;
 <{/if}>
 
-<{if $message}>
+<{if $message|default:false}>
     <span class='bold'>&raquo;</span>
     &nbsp;<{$message.subject}>
     <br>
     <form name="<{$pmform.name}>" id="<{$pmform.name}>" action="<{$pmform.action}>" method="<{$pmform.method}>" <{$pmform.extra}> >
         <table cellpadding='4' cellspacing='1' class='outer bnone width100'>
             <tr>
-                <th colspan='2'><{if $op==out}><{$smarty.const._PM_TO}><{else}><{$smarty.const._PM_FROM}><{/if}></th>
+                <th colspan='2'><{if $op=='out'}><{$smarty.const._PM_TO}><{else}><{$smarty.const._PM_FROM}><{/if}></th>
             </tr>
             <tr class='even'>
                 <td class='aligntop'>

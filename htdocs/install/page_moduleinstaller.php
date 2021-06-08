@@ -1,10 +1,10 @@
 <?php
 /**
  * See the enclosed file license.txt for licensing information.
- * If you did not receive this file, get it at http://www.gnu.org/licenses/gpl-2.0.html
+ * If you did not receive this file, get it at https://www.gnu.org/licenses/gpl-2.0.html
  *
  * @copyright    (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license          GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license          GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package          installer
  * @since            2.3.0
  * @author           Haruki Setoyama  <haruki@planewave.org>
@@ -22,12 +22,13 @@ defined('XOOPS_INSTALL') || die('XOOPS Installation wizard die');
 if (!@include_once "../language/{$wizard->language}/global.php") {
     include_once '../language/english/global.php';
 }
-if (!@include_once "../modules/system/language/{$wizard->language}/admin/modulesadmin.php") {
-    include_once '../modules/system/language/english/admin/modulesadmin.php';
-}
 if (!@include_once "../modules/system/language/{$wizard->language}/admin.php") {
     include_once '../modules/system/language/english/admin.php';
 }
+if (!@include_once "../modules/system/language/{$wizard->language}/admin/modulesadmin.php") {
+    include_once '../modules/system/language/english/admin/modulesadmin.php';
+}
+
 require_once '../class/xoopsformloader.php';
 require_once '../class/xoopslists.php';
 
@@ -113,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             $form     = new XoopsThemeForm('', 'modules', 'index.php', 'post');
-            $moduleYN = new XoopsFormRadio('', 'modules[' . $module->getInfo('dirname') . ']', $value);
+            $moduleYN = new XoopsFormCheckBox('', 'modules[' . $module->getInfo('dirname') . ']', $value);
             $moduleYN->addOption(1, sprintf(INSTALL_THIS_MODULE, $module->getInfo('name')));
             $moduleYN->setExtra("onclick='selectModule(\"" . $file . "\", this)'");
             $form->addElement($moduleYN);

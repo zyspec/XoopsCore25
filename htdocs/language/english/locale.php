@@ -13,7 +13,7 @@
  * Xoops locale
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package             kernel
  * @since               2.3.0
  * @author              Taiwen Jiang <phppp@users.sourceforge.net>
@@ -51,7 +51,7 @@ class XoopsLocal extends XoopsLocalAbstract
      * Number Formats
      *
      * @param  unknown_type $number
-     * @return unknown
+     * @return mixed
      */
     public function number_format($number)
     {

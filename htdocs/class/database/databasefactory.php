@@ -10,7 +10,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package             kernel
  * @subpackage          database
  */
@@ -50,9 +50,9 @@ class XoopsDatabaseFactory
                 require_once $file;
 
                 if (!defined('XOOPS_DB_PROXY')) {
-                    $class = 'Xoops' . ucfirst(XOOPS_DB_TYPE) . 'DatabaseSafe';
+                    $class = 'Xoops' . XOOPS_DB_TYPE . 'DatabaseSafe';
                 } else {
-                    $class = 'Xoops' . ucfirst(XOOPS_DB_TYPE) . 'DatabaseProxy';
+                    $class = 'Xoops' . XOOPS_DB_TYPE . 'DatabaseProxy';
                 }
 
                 $xoopsPreload = XoopsPreload::getInstance();
@@ -87,9 +87,9 @@ class XoopsDatabaseFactory
             if (file_exists($file = XOOPS_ROOT_PATH . '/class/database/' . XOOPS_DB_TYPE . 'database.php')) {
                 include_once $file;
                 if (!defined('XOOPS_DB_PROXY')) {
-                    $class = 'Xoops' . ucfirst(XOOPS_DB_TYPE) . 'DatabaseSafe';
+                    $class = 'Xoops' . XOOPS_DB_TYPE . 'DatabaseSafe';
                 } else {
-                    $class = 'Xoops' . ucfirst(XOOPS_DB_TYPE) . 'DatabaseProxy';
+                    $class = 'Xoops' . XOOPS_DB_TYPE . 'DatabaseProxy';
                 }
                 unset($database);
                 $database = new $class();

@@ -9,8 +9,8 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @copyright       (c) 2000-2021 XOOPS Project (www.xoops.org)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  */
 $xoopsOption['pagetype'] = 'admin';
 
@@ -35,7 +35,7 @@ xoops_cp_header();
 if (!isset($xoopsConfig['admin_warnings_enable']) || $xoopsConfig['admin_warnings_enable']) {
     // recommend lowest security supported version at time of XOOPS release
     // see: http://php.net/supported-versions.php
-    $minRecommendedPHP = '7.1.0';
+    $minRecommendedPHP = '7.3.0';
     if (version_compare(PHP_VERSION, $minRecommendedPHP) < 0) {
         xoops_error(sprintf(_AD_WARNING_OLD_PHP, $minRecommendedPHP));
         echo '<br>';
@@ -80,31 +80,37 @@ if (!empty($_GET['xoopsorgnews'])) {
     // Multiple feeds
     $myts     = MyTextSanitizer::getInstance();
     $rssurl   = array();
-    //$rssurl[] = 'http://sourceforge.net/export/rss2_projnews.php?group_id=41586&rss_fulltext=1';
-    $rssurl[] = 'http://www.xoops.org/backend.php';
+    $rssurl[] = 'https://xoops.org/modules/publisher/backend.php';
     if ($URLs = include $GLOBALS['xoops']->path('language/' . xoops_getConfigOption('language') . '/backend.php')) {
-        $rssurl = array_unique(array_merge($rssurl, $URLs));
+        $rssurl = array_unique(array_merge($URLs, $rssurl));
     }
     $rssfile = 'adminnews-' . xoops_getConfigOption('language');
     xoops_load('XoopsCache');
     $items = array();
     if (!$items = XoopsCache::read($rssfile)) {
-        require_once $GLOBALS['xoops']->path('class/snoopy.php');
-        include_once $GLOBALS['xoops']->path('class/xml/rss/xmlrss2parser.php');
+        XoopsLoad::load('xoopshttpget');
+        require_once $GLOBALS['xoops']->path('class/xml/rss/xmlrss2parser.php');
 
         xoops_load('XoopsLocal');
-        $snoopy = new Snoopy();
         $cnt    = 0;
         foreach ($rssurl as $url) {
-            if ($snoopy->fetch($url)) {
-                $rssdata    = $snoopy->results;
+            try {
+                $httpGet = new XoopsHttpGet($url);
+            } catch (\RuntimeException $e) {
+                echo $e->getMessage() . '<br>';
+                break;
+            }
+            $rssdata    = $httpGet->fetch();
+            if (false === $rssdata) {
+                echo $httpGet->getError() . '<br>';
+            } else {
                 $rss2parser = new XoopsXmlRss2Parser($rssdata);
                 if (false !== $rss2parser->parse()) {
                     $_items =& $rss2parser->getItems();
-                    $count  = count($_items);
+                    $count = count($_items);
                     for ($i = 0; $i < $count; ++$i) {
-                        $_items[$i]['title']                                                         = XoopsLocal::convert_encoding($_items[$i]['title'], _CHARSET, 'UTF-8');
-                        $_items[$i]['description']                                                   = XoopsLocal::convert_encoding($_items[$i]['description'], _CHARSET, 'UTF-8');
+                        $_items[$i]['title'] = XoopsLocal::convert_encoding($_items[$i]['title'], _CHARSET, 'UTF-8');
+                        $_items[$i]['description'] = XoopsLocal::convert_encoding($_items[$i]['description'], _CHARSET, 'UTF-8');
                         $items[(string)strtotime($_items[$i]['pubdate']) . '-' . (string)($cnt++)] = $_items[$i];
                     }
                 } else {
@@ -112,13 +118,13 @@ if (!empty($_GET['xoopsorgnews'])) {
                 }
             }
         }
-        krsort($items);
+        //krsort($items);
         XoopsCache::write($rssfile, $items, 86400);
     }
     if ($items != '') {
-        $ret = '<table class="outer width100">';
+        $ret = '<table id="xoopsorgnews" class="outer width100">';
         foreach (array_keys($items) as $i) {
-            $ret .= '<tr class="head"><td><a href="' . htmlspecialchars($items[$i]['link']) . '" rel="external">';
+            $ret .= '<tr class="head"><td><a href="' . htmlspecialchars(trim($items[$i]['link'])) . '" rel="external">';
             $ret .= htmlspecialchars($items[$i]['title']) . '</a> (' . htmlspecialchars($items[$i]['pubdate']) . ')</td></tr>';
             if ($items[$i]['description'] != '') {
                 $ret .= '<tr><td class="odd">' . $items[$i]['description'];

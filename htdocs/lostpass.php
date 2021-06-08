@@ -10,7 +10,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package             core
  * @since               2.0.0
  */
@@ -39,7 +39,7 @@ if (empty($getuser)) {
     redirect_header('user.php', 2, $msg);
 } else {
     $code   = isset($_GET['code']) ? trim($_GET['code']) : '';
-    $areyou = substr($getuser[0]->getVar('pass'), 0, 5);
+    $areyou = substr(md5($getuser[0]->getVar('pass')), 0, 5);
     if ($code != '' && $areyou == $code) {
         $newpass     = xoops_makepass();
         $xoopsMailer = xoops_getMailer();

@@ -10,12 +10,14 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package             kernel
  * @since               2.0.0
  */
 
 defined('XOOPS_ROOT_PATH') || exit('Restricted access');
+
+/** @var \XoopsNotificationHandler $notification_handler */
 
 /**
  * xoops_getHandler()
@@ -234,9 +236,11 @@ function xoops_header($closehead = true)
     $themeUrl = XOOPS_THEME_URL . '/' . $themeSet . '/';
     include_once XOOPS_ROOT_PATH . '/class/template.php';
     $headTpl = new \XoopsTpl();
+    $GLOBALS['xoopsHeadTpl'] = $headTpl;  // expose template for use by caller
     $headTpl->assign(array(
         'closeHead'      => (bool) $closehead,
         'themeUrl'       => $themeUrl,
+        'themePath'      => $themePath,
         'xoops_langcode' => _LANGCODE,
         'xoops_charset'  => _CHARSET,
         'xoops_sitename' => $xoopsConfig['sitename'],
@@ -368,26 +372,58 @@ function xoops_result($msg, $title = '')
  */
 function xoops_confirm($hiddens, $action, $msg, $submit = '', $addtoken = true)
 {
-    $submit = ($submit != '') ? trim($submit) : _SUBMIT;
-    echo '<div class="confirmMsg">' . $msg . '<br>
-          <form method="post" action="' . $action . '">';
+	if (!isset($GLOBALS['xoTheme']) || !is_object($GLOBALS['xoTheme'])) {
+		include_once $GLOBALS['xoops']->path('/class/theme.php');
+		$GLOBALS['xoTheme'] = new \xos_opal_Theme();
+	}
+	require_once $GLOBALS['xoops']->path('/class/template.php');
+	$confirmTpl = new \XoopsTpl();
+	$confirmTpl->assign('msg', $msg);
+	$confirmTpl->assign('action', $action);
+	$tempHiddens = '';
     foreach ($hiddens as $name => $value) {
         if (is_array($value)) {
             foreach ($value as $caption => $newvalue) {
-                echo '<input type="radio" name="' . $name . '" value="' . htmlspecialchars($newvalue) . '" /> ' . $caption;
+                $tempHiddens .= '<input type="radio" name="' . $name . '" value="' . htmlspecialchars($newvalue) . '" /> ' . $caption;
             }
-            echo '<br>';
+            $tempHiddens .= '<br>';
         } else {
-            echo '<input type="hidden" name="' . $name . '" value="' . htmlspecialchars($value) . '" />';
+            $tempHiddens .= '<input type="hidden" name="' . $name . '" value="' . htmlspecialchars($value) . '" />';
         }
     }
-    if ($addtoken != false) {
-        echo $GLOBALS['xoopsSecurity']->getTokenHTML();
-    }
-    echo '<input type="submit" class="btn btn-default" name="confirm_submit" value="' . $submit . '" title="' . $submit . '"/>
-          <input type="button" class="btn btn-default" name="confirm_back" value="' . _CANCEL . '" onclick="history.go(-1);" title="' . _CANCEL . '" />
-          </form>
-          </div>';
+	$confirmTpl->assign('hiddens', $tempHiddens);
+	$confirmTpl->assign('addtoken', $addtoken);
+	if ($addtoken != false) {
+		$confirmTpl->assign('token', $GLOBALS['xoopsSecurity']->getTokenHTML());
+	}
+    $submit = ($submit != '') ? trim($submit) : _SUBMIT;
+	$confirmTpl->assign('submit', $submit);
+	$html = $confirmTpl->fetch("db:system_confirm.tpl");
+	if (!empty($html)) {
+		echo $html;
+	} else {
+		$submit = ($submit != '') ? trim($submit) : _SUBMIT;
+		echo '<div class="confirmMsg">' . $msg . '<br>
+			  <form method="post" action="' . $action . '">';
+		foreach ($hiddens as $name => $value) {
+			if (is_array($value)) {
+				foreach ($value as $caption => $newvalue) {
+					echo '<input type="radio" name="' . $name . '" value="' . htmlspecialchars($newvalue) . '" /> ' . $caption;
+				}
+				echo '<br>';
+			} else {
+				echo '<input type="hidden" name="' . $name . '" value="' . htmlspecialchars($value) . '" />';
+			}
+		}
+		if ($addtoken != false) {
+			echo $GLOBALS['xoopsSecurity']->getTokenHTML();
+		}
+		// TODO - these buttons should go through formRenderer
+		echo '<input type="submit" class="btn btn-default btn-secondary" name="confirm_submit" value="' . $submit . '" title="' . $submit . '"/>
+			  <input type="button" class="btn btn-default btn-secondary" name="confirm_back" value="' . _CANCEL . '" onclick="history.go(-1);" title="' . _CANCEL . '" />
+			  </form>
+			  </div>';
+	}
 }
 
 /**
@@ -931,6 +967,7 @@ function xoops_notification_deletebyitem($module_id, $category, $item_id)
  */
 function xoops_comment_count($module_id, $item_id = null)
 {
+    /** @var \XoopsCommentHandler $comment_handler */
     $comment_handler = xoops_getHandler('comment');
     $criteria        = new CriteriaCompo(new Criteria('com_modid', (int)$module_id));
     if (isset($item_id)) {
@@ -950,6 +987,7 @@ function xoops_comment_count($module_id, $item_id = null)
 function xoops_comment_delete($module_id, $item_id)
 {
     if ((int)$module_id > 0 && (int)$item_id > 0) {
+        /** @var \XoopsCommentHandler $comment_handler */
         $comment_handler = xoops_getHandler('comment');
         $comments        = $comment_handler->getByItemId($module_id, $item_id);
         if (is_array($comments)) {

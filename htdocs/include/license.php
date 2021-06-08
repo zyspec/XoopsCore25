@@ -16,13 +16,14 @@
  *  Xoops Version
  *
  * @copyright       (c) 2000-2017 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @deprecated
  */
 defined('XOOPS_ROOT_PATH') || exit('Restricted access');
 
-$licenseFile = XOOPS_VAR_PATH . '/data/license.php';
-if (file_exists($licenseFile)) {
+$licenseFile = (defined('XOOPS_VAR_PATH')) ? XOOPS_VAR_PATH . '/data/license.php' : '';
+
+if (defined('XOOPS_VAR_PATH') && file_exists($licenseFile)) {
     include_once $licenseFile;
 } else {
     define('XOOPS_LICENSE_CODE', 'GPL');

@@ -10,7 +10,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package             kernel
  * @subpackage          form
  * @since               2.0.0
@@ -215,7 +215,7 @@ class XoopsFormElement
     /**
      * get the "class" attribute for the element
      *
-     * @return string "class" attribute value
+     * @return string|false "class" attribute value
      */
     public function getClass()
     {
@@ -372,7 +372,7 @@ class XoopsFormElement
      * Get the element's nocolspan
      * Modified by Catzwolf
      *
-     * @return string
+     * @return string|bool
      *
      * @deprecated  PLEASE AVOID USING THIS METHOD
      */

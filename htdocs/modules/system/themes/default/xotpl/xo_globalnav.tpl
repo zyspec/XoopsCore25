@@ -7,11 +7,11 @@
                 <ul>
                     <{foreach item=sub from=$item.menu}>
                         <li>
-                            <{if $sub.options != 0}>
+                            <{if $sub.options|default:0 != 0}>
                                 <a class="sub" href="<{$sub.link}>" title="<{$sub.title|strip_tags:false}>"><{$sub.title}></a>
                                 <ul>
                                     <{foreach item=option from=$sub.options}>
-                                        <li><a href="<{$sub.url}><{$option.link}>"><{$option.title}></a></li>
+                                        <li><a href="<{$sub.url}><{$option.link|default:''}>"><{$option.title|default:''}></a></li>
                                     <{/foreach}>
                                 </ul>
                             <{else}>

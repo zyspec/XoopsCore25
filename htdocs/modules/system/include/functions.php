@@ -9,7 +9,7 @@
  * which is considered copyrighted (c) material of the original comment or credit authors.
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package             system
  */
 
@@ -22,10 +22,12 @@
  * @param  string           $default
  * @param  string           $type
  * @return int|mixed|string
+ * @deprecated since 2.5.11, please use Xmf\Request
  */
 function system_CleanVars(&$global, $key, $default = '', $type = 'int')
 {
-    switch ($type) {
+	$GLOBALS['xoopsLogger']->addDeprecated("system_CleanVars() is deprecated since XOOPS 2.5.11, please use 'Xmf\Request' instead");
+	switch ($type) {
         case 'array':
             $ret = (isset($global[$key]) && is_array($global[$key])) ? $global[$key] : $default;
             break;
@@ -33,7 +35,7 @@ function system_CleanVars(&$global, $key, $default = '', $type = 'int')
             $ret = isset($global[$key]) ? strtotime($global[$key]) : $default;
             break;
         case 'string':
-            $ret = isset($global[$key]) ? filter_var($global[$key], FILTER_SANITIZE_MAGIC_QUOTES) : $default;
+            $ret = isset($global[$key]) ? Xmf\FilterInput::clean($global[$key], 'STRING') : $default;
             break;
         case 'int':
         default:

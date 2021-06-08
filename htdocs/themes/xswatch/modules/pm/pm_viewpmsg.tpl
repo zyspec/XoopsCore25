@@ -1,8 +1,8 @@
 <h4><{$smarty.const._PM_PRIVATEMESSAGE}></h4>
-<{if $op}>
+ <{if $op|default:''}>
 <div class="current-tab">
     <div class="row">
-        <{if $op == "out"}>
+        <{if $op|default:'' == "out"}>
             <div class="col-xs-6 col-md-6">
                 <a class="btn btn-info btn-block" href="viewpmsg.php?op=in" title="<{$smarty.const._PM_INBOX}>"><{$smarty.const._PM_INBOX}></a>
             </div>
@@ -28,7 +28,7 @@
 </div><!-- .current-tab -->
 
 <div class="message-current-tab">
-    <{if $op == "out"}>
+    <{if $op|default:'' == "out"}>
     <div class="alert alert-success" role="alert"><{$smarty.const._PM_OUTBOX}></div>
     <{elseif $op == "save"}>
     <div class="alert alert-success" role="alert"><{$smarty.const._PM_SAVEBOX}></div>
@@ -37,21 +37,21 @@
     <{/if}>
 </div><!-- .message-current-tab -->
 
-<{if $msg}>
+<{if $msg|default:false}>
     <div class="alert alert-info alert-dismissable">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
         <strong><{$msg}></strong>
     </div>
 <{/if}>
 
-<{if $errormsg}>
+<{if $errormsg|default:false}>
     <div class="alert alert-danger alert-dismissable">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
         <strong><{$errormsg}></strong>
     </div>
 <{/if}>
 
-<{if $pagenav}>
+<{if $pagenav|default:false}>
     <{$pagenav}>
 <{/if}>
 
@@ -61,7 +61,7 @@
     <tr class="txtcenter alignmiddle">
         <th class="txtcenter"><input name='allbox' id='allbox' onclick='xoopsCheckAll("<{$pmform.name}>", "allbox");' type='checkbox' value='Check All' title="<{$smarty.const.THEME_SELECT_ALL}>"/></th>
         <th><span class="glyphicon glyphicon-download-alt"></span></th>
-        <{if $op == "out"}>
+        <{if $op|default:'' == "out"}>
             <th><{$smarty.const._PM_TO}></th>
         <{else}>
             <th><{$smarty.const._PM_FROM}></th>
@@ -75,7 +75,7 @@
             <td class='even txtcenter' colspan='6'><{$smarty.const._PM_YOUDONTHAVE}></td>
         </tr>
     <{/if}>
-    <{foreach item=message from=$messages}>
+    <{foreach item=message from=$messages|default:null}>
         <tr<{if $message.read_msg != 1}> class="info"<{/if}>>
             <td class='aligntop txtcenter'>
                 <input type='checkbox' id='msg_id_<{$message.msg_id}>' name='msg_id[]' value='<{$message.msg_id}>' />
@@ -126,7 +126,7 @@
 </table>
 </form>
 
-<{if $pagenav}>
+<{if $pagenav|default:false}>
     <{$pagenav}>
 <{/if}>
 <{/if}>

@@ -7,7 +7,7 @@
                 <ul>
                     <{foreach item=sub from=$item.menu}>
                         <li>
-                            <{if $sub.options != 0}>
+                            <{if $sub.options|default:0 != 0}>
                                 <a class="sub" href="<{$sub.link}>" title="<{$sub.title|strip_tags:false}>"><{$sub.title}></a>
                                 <ul>
                                     <{foreach item=option from=$sub.options}>
@@ -25,9 +25,9 @@
     </ul>
     <!-- start style choose -->
     <div id="choosestyle">
-        <a href="<{$theme_css}>/index.html?style=dark" rel="dark" class="styleswitch"><{$smarty.const._OXYGEN_DARK}></a>
-        <a href="<{$theme_css}>/index.html?style=silver" rel="silver" class="styleswitch"><{$smarty.const._OXYGEN_SILVER}></a>
-        <a href="<{$theme_css}>/index.html?style=orange" rel="orange" class="styleswitch"><{$smarty.const._OXYGEN_ORANGE}></a>
+        <a href="<{$theme_css}>/index.php?style=dark" rel="dark" class="styleswitch"><{$smarty.const._OXYGEN_DARK}></a>
+        <a href="<{$theme_css}>/index.php?style=silver" rel="silver" class="styleswitch"><{$smarty.const._OXYGEN_SILVER}></a>
+        <a href="<{$theme_css}>/index.php?style=orange" rel="orange" class="styleswitch"><{$smarty.const._OXYGEN_ORANGE}></a>
     </div>
 </div>
 

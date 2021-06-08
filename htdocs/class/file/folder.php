@@ -10,7 +10,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright       (c) 2005-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package             class
  * @subpackage          file
  * @since               2.3.0
@@ -147,13 +147,13 @@ class XoopsFolderHandler
      *
      * @param string $path Path to the directory to change to
      *
-     * @return string The new path. Returns false on failure
+     * @return string|false The new path. Returns false on failure
      * @access   public
      */
     public function cd($path)
     {
         $path = $this->realpath($path);
-        if (is_dir($path) && file_exists($path)) {
+        if (is_string($path) && is_dir($path) && file_exists($path)) {
             return $this->path = $path;
         }
 
@@ -322,7 +322,7 @@ class XoopsFolderHandler
      */
     public function normalizePath($path)
     {
-        if (XoopsFolderHandler::isWindowsPath($path)) {
+        if ($this->isWindowsPath($path)) {
             return '\\';
         }
 
@@ -340,7 +340,7 @@ class XoopsFolderHandler
      */
     public function correctSlashFor($path)
     {
-        if (XoopsFolderHandler::isWindowsPath($path)) {
+        if ($this->isWindowsPath($path)) {
             return '\\';
         }
 
@@ -358,11 +358,11 @@ class XoopsFolderHandler
      */
     public function slashTerm($path)
     {
-        if (XoopsFolderHandler::isSlashTerm($path)) {
+        if ($this->isSlashTerm($path)) {
             return $path;
         }
 
-        return $path . XoopsFolderHandler::correctSlashFor($path);
+        return $path . $this->correctSlashFor($path);
     }
 
     /**
@@ -750,7 +750,7 @@ class XoopsFolderHandler
      *
      * @param array|string $options (to, from, chmod, skip)
      *
-     * @return boolean Success
+     * @return string|boolean Success
      * @access public
      */
     public function move($options)
@@ -801,7 +801,7 @@ class XoopsFolderHandler
      *
      * @param string $path Path to resolve
      *
-     * @return string The resolved path
+     * @return string|false The resolved path
      */
     public function realpath($path)
     {
@@ -815,7 +815,7 @@ class XoopsFolderHandler
         }
         $parts    = explode('/', $path);
         $newparts = array();
-        $newpath  = $path{0} === '/' ? '/' : '';
+        $newpath  = $path[0] === '/' ? '/' : '';
         while (($part = array_shift($parts)) !== null) {
             if ($part === '.' || $part == '') {
                 continue;
@@ -831,7 +831,7 @@ class XoopsFolderHandler
             $newparts[] = $part;
         }
         $newpath .= implode('/', $newparts);
-        if (strlen($path > 1) && $path{strlen($path) - 1} === '/') {
+        if (strlen($path > 1) && $path[strlen($path) - 1] === '/') {
             $newpath .= '/';
         }
 

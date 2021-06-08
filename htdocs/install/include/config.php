@@ -1,10 +1,10 @@
 <?php
 /**
  * See the enclosed file license.txt for licensing information.
- * If you did not receive this file, get it at http://www.gnu.org/licenses/gpl-2.0.html
+ * If you did not receive this file, get it at https://www.gnu.org/licenses/gpl-2.0.html
  *
  * @copyright    (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license          GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license          GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package          installer
  * @since            2.3.0
  * @author           Haruki Setoyama  <haruki@planewave.org>
@@ -58,6 +58,7 @@ $configs['extensions'] = array(
 $configs['writable'] = array(
     'uploads/',
     'uploads/avatars/',
+    'uploads/files/',
     'uploads/images/',
     'uploads/ranks/',
     'uploads/smilies/',
@@ -79,7 +80,10 @@ $configs['dataPath'] = array(
         'smarty_cache',
         'smarty_compile',
         ),
-    'configs'   => null,
+    'configs'   => array(
+        'captcha',
+        'textsanitizer',
+    ),
     'data'      => null,
     'protector' => null,
 );

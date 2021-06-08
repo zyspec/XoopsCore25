@@ -11,11 +11,12 @@
 
 /**
  * @copyright    XOOPS Project http://xoops.org/
- * @license      GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license      GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package
  * @since
  * @author       XOOPS Development Team, Kazumi Ono (AKA onokazu)
  */
+use Xmf\Request;
 
 // Include header
 include __DIR__ . '/header.php';
@@ -69,9 +70,9 @@ if ($admintest != 0) {
 }
 
 if (false !== $error) {
-    $op = system_CleanVars($_REQUEST, 'op', '', 'string');
+	$op = Request::getString('op', '');
     if ($op === 'system_activate') {
-        $part           = system_CleanVars($_REQUEST, 'type', '', 'string');
+        $part           = Request::getString('type', '');
         /* @var XoopsConfigHandler $config_handler */
         $config_handler = xoops_getHandler('config');
 

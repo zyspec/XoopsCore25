@@ -12,10 +12,10 @@
  * Installer common include file
  *
  * See the enclosed file license.txt for licensing information.
- * If you did not receive this file, get it at http://www.gnu.org/licenses/gpl-2.0.html
+ * If you did not receive this file, get it at https://www.gnu.org/licenses/gpl-2.0.html
  *
- * @copyright    (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license          GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @copyright    (c) 2000-2021 XOOPS Project (www.xoops.org)
+ * @license          GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package          installer
  * @since            2.3.0
  * @author           Haruki Setoyama  <haruki@planewave.org>
@@ -39,7 +39,7 @@ function fatalPhpErrorHandler($e = null) {
     $throwableClass = '\Throwable';
     if ($e === null) {
         $lastError = error_get_last();
-        if ($lastError['type'] === E_ERROR) {
+        if ($lastError !== null && $lastError['type'] === E_ERROR) {
             // fatal error
             printf($messageFormat, 'Error', $lastError['message'], $lastError['file'], $lastError['line']);
         }
@@ -51,28 +51,39 @@ function fatalPhpErrorHandler($e = null) {
 register_shutdown_function('fatalPhpErrorHandler');
 set_exception_handler('fatalPhpErrorHandler');
 
+$options = array(
+    'lifetime' => 0,
+    'path'     => '/',
+    'domain'   => null,
+    'secure'   => false,
+    'httponly' => true,
+    'samesite' => 'strict',
+);
 // options for mainfile.php
 if (empty($xoopsOption['hascommon'])) {
     $xoopsOption['nocommon'] = true;
+    if (PHP_VERSION_ID >= 70300) {
+        session_set_cookie_params($options);
+    }
+
     session_start();
+
+    if (PHP_VERSION_ID < 70300) {
+        require_once '../include/xoopssetcookie.php';
+        xoops_setcookie(session_name(), session_id(), $options);
+    }
+
 }
+
 @include '../mainfile.php';
 if (!defined('XOOPS_ROOT_PATH')) {
     define('XOOPS_ROOT_PATH', str_replace("\\", '/', realpath('../')));
 }
 
-/*
-error_reporting( 0 );
-if (isset($xoopsLogger)) {
-    $xoopsLogger->activated = false;
-}
-error_reporting(E_ALL);
-$xoopsLogger->activated = true;
-*/
-
 date_default_timezone_set(@date_default_timezone_get());
 include './class/installwizard.php';
 include_once '../include/version.php';
+require_once '../include/xoopssetcookie.php';
 include_once './include/functions.php';
 include_once '../class/module.textsanitizer.php';
 include_once '../class/libraries/vendor/autoload.php';

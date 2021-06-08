@@ -10,7 +10,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @author              Gregory Mage (AKA Mage)
  * @package             system
  */
@@ -75,7 +75,7 @@ class SystemGroup extends XoopsGroup
         $form->setExtra('enctype="multipart/form-data"');
 
         $name_text = new XoopsFormText(_AM_SYSTEM_GROUPS_NAME, 'name', 30, 50, $this->getVar('name'));
-        $desc_text = new XoopsFormTextArea(_AM_SYSTEM_GROUPS_DESCRIPTION, 'desc', $this->getVar('description'));
+        $desc_text = new XoopsFormTextArea(_AM_SYSTEM_GROUPS_DESCRIPTION, 'desc', $this->getVar('description', 'e'));
 
         $system_catids = new XoopsFormElementTray(_AM_SYSTEM_GROUPS_SYSTEMRIGHTS, '');
 

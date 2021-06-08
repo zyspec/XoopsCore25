@@ -11,11 +11,12 @@
 
 /**
  * @copyright    XOOPS Project http://xoops.org/
- * @license      GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license      GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package
  * @since
  * @author       XOOPS Development Team, Kazumi Ono (AKA onokazu)
  */
+use Xmf\Request;
 
 // Check users rights
 if (!is_object($xoopsUser) || !is_object($xoopsModule) || !$xoopsUser->isAdmin($xoopsModule->mid())) {
@@ -33,8 +34,7 @@ if (isset($_POST)) {
 }
 
 // Get Action type
-$op     = system_CleanVars($_REQUEST, 'op', 'list', 'string');
-$module = system_CleanVars($_REQUEST, 'module', '', 'string');
+$op = Request::getString('op', 'list');
 
 if (in_array($op, array('confirm', 'submit', 'install_ok', 'update_ok', 'uninstall_ok'))) {
     if (!$GLOBALS['xoopsSecurity']->check()) {
@@ -73,6 +73,7 @@ switch ($op) {
         $listed_mods    = array();
         $i              = 0;
         $install_mods   = array();
+		$module = Request::getArray('module', array());
         foreach ($installed_mods as $module) {
             /* @var XoopsModule $module */
             $listed_mods[$i]                  = $module->toArray();
@@ -86,7 +87,7 @@ switch ($op) {
             $listed_mods[$i]['credits']       = $module->getInfo('credits');
             $listed_mods[$i]['license']       = $module->getInfo('license');
             $listed_mods[$i]['description']   = $module->getInfo('description');
-            if (round($module->getInfo('version'), 2) != $listed_mods[$i]['version']) {
+            if (round((float)$module->getInfo('version'), 2) != $listed_mods[$i]['version']) {
                 $listed_mods[$i]['warning_update'] = true;
             } else {
                 $listed_mods[$i]['warning_update'] = false;
@@ -158,7 +159,7 @@ switch ($op) {
                     $toinstall_mods[$i]['name']          = htmlspecialchars($module->getInfo('name'), ENT_QUOTES);
                     $toinstall_mods[$i]['dirname']       = $module->getInfo('dirname');
                     $toinstall_mods[$i]['image']         = $module->getInfo('image');
-                    $toinstall_mods[$i]['version']       = round($module->getInfo('version'), 2);
+                    $toinstall_mods[$i]['version']       = round((float)$module->getInfo('version'), 2);
                     $toinstall_mods[$i]['module_status'] = $module->getInfo('module_status');
                     $toinstall_mods[$i]['author']        = $module->getInfo('author');
                     $toinstall_mods[$i]['credits']       = $module->getInfo('credits');
@@ -232,7 +233,7 @@ switch ($op) {
             $newname[$mid]                = trim(XoopsFilterInput::clean($newname[$mid], 'STRING'));
             $modifs_mods[$i]['mid']       = $mid;
             $modifs_mods[$i]['oldname']   = $myts->htmlSpecialChars($myts->stripSlashesGPC($oldname[$mid]));
-            $modifs_mods[$i]['newname']   = $myts->htmlSpecialChars(trim($myts->stripslashesGPC($newname[$mid])));
+            $modifs_mods[$i]['newname']   = $myts->htmlSpecialChars(trim($myts->stripSlashesGPC($newname[$mid])));
             $modifs_mods[$i]['newstatus'] = isset($newstatus[$mid]) ? $myts->htmlSpecialChars($newstatus[$mid]) : 0;
             ++$i;
         }
@@ -246,7 +247,7 @@ switch ($op) {
         // Get module handler
         /* @var XoopsModuleHandler $module_handler */
         $module_handler = xoops_getHandler('module');
-        $module_id      = system_CleanVars($_POST, 'mid', 0, 'int');
+        $module_id      = Request::getInt('mid', 0);
         if ($module_id > 0) {
             /* @var XoopsModule $module */
             $module = $module_handler->get($module_id);
@@ -271,7 +272,7 @@ switch ($op) {
         // Get module handler
 
         $module_handler = xoops_getHandler('module');
-        $module_id      = system_CleanVars($_POST, 'mid', 0, 'int');
+		$module_id      = Request::getInt('mid', 0);
         if ($module_id > 0) {
             $module = $module_handler->get($module_id);
             $old    = $module->getVar('weight');
@@ -330,6 +331,7 @@ switch ($op) {
         break;
 
     case 'install':
+		$module = Request::getString('module', '');
         $module = $myts->htmlSpecialChars($module);
         // Get module handler
         /* @var XoopsModuleHandler $module_handler */
@@ -388,6 +390,7 @@ switch ($op) {
         break;
 
     case 'uninstall':
+		$module = Request::getString('module', '');
         $module = $myts->htmlSpecialChars($module);
         // Get module handler
         /* @var XoopsModuleHandler $module_handler */
@@ -414,6 +417,7 @@ switch ($op) {
         break;
 
     case 'uninstall_ok':
+		$module = Request::getString('module', '');
         $ret   = array();
         $ret[] = xoops_module_uninstall($module);
         // Flush cache files for cpanel GUIs
@@ -445,6 +449,7 @@ switch ($op) {
         break;
 
     case 'update':
+		$module = Request::getString('module', '');
         $module = $myts->htmlSpecialChars($module);
         // Get module handler
         /* @var XoopsModuleHandler $module_handler */
@@ -471,6 +476,7 @@ switch ($op) {
         break;
 
     case 'update_ok':
+		$module = Request::getString('module', '');
         $ret   = array();
         $ret[] = xoops_module_update($module);
         // Flush cache files for cpanel GUIs

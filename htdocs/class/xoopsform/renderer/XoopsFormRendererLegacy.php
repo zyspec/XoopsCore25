@@ -14,9 +14,8 @@
  * @category  XoopsForm
  * @package   XoopsFormRendererLegacy
  * @author    Richard Griffith <richard@geekwright.com>
- * @copyright 2017 XOOPS Project (http://xoops.org)
- * @license   GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
- * @link      http://xoops.org
+ * @copyright 2017-2021 XOOPS Project (https://xoops.org)
+ * @license   GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  */
 class XoopsFormRendererLegacy implements XoopsFormRendererInterface
 {
@@ -156,8 +155,6 @@ class XoopsFormRendererLegacy implements XoopsFormRendererInterface
      */
     public function renderFormDhtmlTextArea(XoopsFormDhtmlTextArea $element)
     {
-        static $js_loaded;
-
         xoops_loadLanguage('formdhtmltextarea');
         $ret = '';
         // actions
@@ -181,13 +178,23 @@ class XoopsFormRendererLegacy implements XoopsFormRendererInterface
             $ret .= '<br>' . "<div id='" . $element->getName() . "_hidden' style='display: block;'> " . '   <fieldset>' . '       <legend>' . $button . '</legend>' . "       <div id='" . $element->getName() . "_hidden_data'>" . _XOOPS_FORM_PREVIEW_CONTENT . '</div>' . '   </fieldset>' . '</div>';
         }
         // Load javascript
-        if (empty($js_loaded)) {
-            $javascript = ($element->js ? '<script type="text/javascript">' . $element->js . '</script>' : '') . '<script type="text/javascript" src="' . XOOPS_URL . '/include/formdhtmltextarea.js"></script>';
-            $ret        = $javascript . $ret;
-            $js_loaded  = true;
-        }
+        $javascript_file = XOOPS_URL . '/include/formdhtmltextarea.js';
+        $javascript_file_element = 'include_formdhtmltextarea_js';
+        $javascript = ($element->js ? '<script type="text/javascript">' . $element->js . '</script>' : '');
+        $javascript .= <<<EOJS
+<script>
+    var el = document.getElementById('{$javascript_file_element}');
+    if (el === null) {
+        var xformtag = document.createElement('script');
+        xformtag.id = '{$javascript_file_element}';
+        xformtag.type = 'text/javascript';
+        xformtag.src = '{$javascript_file}';
+        document.body.appendChild(xformtag);
+    }
+</script>
+EOJS;
 
-        return $ret;
+        return $javascript . $ret;
     }
 
     /**
@@ -242,13 +249,13 @@ class XoopsFormRendererLegacy implements XoopsFormRendererInterface
     {
         $textarea_id = $element->getName();
         $hiddentext  = $element->_hiddenText;
-        $fontStr = "<script type=\"text/javascript\">" . "var _editor_dialog = ''" . "+ '<select class=\"input-sm form-control\" id=\'{$textarea_id}Size\' onchange=\'xoopsSetElementAttribute(\"size\", this.options[this.selectedIndex].value, \"{$textarea_id}\", \"{$hiddentext}\");\'>'" . "+ '<option value=\'SIZE\'>" . _SIZE . "</option>'";
+        $fontStr = "<script type=\"text/javascript\">" . "var _editor_dialog = ''" . "+ '<select class=\"input-sm form-control\" id=\'{$textarea_id}Size\' onchange=\'xoopsSetElementAttribute(\"size\", this.options[this.selectedIndex].value, \"{$textarea_id}\", \"{$hiddentext}\");\' onfocusout=\'this.selectedIndex=0;\'>'" . "+ '<option value=\'SIZE\'>" . _SIZE . "</option>'";
 
         foreach ($GLOBALS['formtextdhtml_sizes'] as $_val => $_name) {
             $fontStr .= " + '<option value=\'{$_val}\'>{$_name}</option>'";
         }
         $fontStr .= " + '</select> '";
-        $fontStr .= "+ '<select class=\"input-sm form-control\" id=\'{$textarea_id}Font\' onchange=\'xoopsSetElementAttribute(\"font\", this.options[this.selectedIndex].value, \"{$textarea_id}\", \"{$hiddentext}\");\'>'" . "+ '<option value=\'FONT\'>" . _FONT . "</option>'";
+        $fontStr .= "+ '<select class=\"input-sm form-control\" id=\'{$textarea_id}Font\' onchange=\'xoopsSetElementAttribute(\"font\", this.options[this.selectedIndex].value, \"{$textarea_id}\", \"{$hiddentext}\");\' onfocusout=\'this.selectedIndex=0;\'>'" . "+ '<option value=\'FONT\'>" . _FONT . "</option>'";
         $fontarray = !empty($GLOBALS['formtextdhtml_fonts']) ? $GLOBALS['formtextdhtml_fonts'] : array(
             'Arial',
             'Courier',
@@ -261,7 +268,7 @@ class XoopsFormRendererLegacy implements XoopsFormRendererInterface
             $fontStr .= " + '<option value=\'{$font}\'>{$font}</option>'";
         }
         $fontStr .= " + '</select> '";
-        $fontStr .= "+ '<select class=\"input-sm form-control\" id=\'{$textarea_id}Color\' onchange=\'xoopsSetElementAttribute(\"color\", this.options[this.selectedIndex].value, \"{$textarea_id}\", \"{$hiddentext}\");\'>'" . "+ '<option value=\'COLOR\'>" . _COLOR . "</option>';" . "var _color_array = new Array('00', '33', '66', '99', 'CC', 'FF');
+        $fontStr .= "+ '<select class=\"input-sm form-control\" id=\'{$textarea_id}Color\' onchange=\'xoopsSetElementAttribute(\"color\", this.options[this.selectedIndex].value, \"{$textarea_id}\", \"{$hiddentext}\");\' onfocusout=\'this.selectedIndex=0;\'>'" . "+ '<option value=\'COLOR\'>" . _COLOR . "</option>';" . "var _color_array = new Array('00', '33', '66', '99', 'CC', 'FF');
                 for (var i = 0; i < _color_array.length; i ++) {
                     for (var j = 0; j < _color_array.length; j ++) {
                         for (var k = 0; k < _color_array.length; k ++) {
@@ -497,7 +504,7 @@ class XoopsFormRendererLegacy implements XoopsFormRendererInterface
             $display_value = date(_SHORTDATESTRING, $ele_value);
         }
 
-        $jstime = formatTimestamp($ele_value, _SHORTDATESTRING);
+        $jstime = formatTimestamp($ele_value, 'm/d/Y');
         if (isset($GLOBALS['xoTheme']) && is_object($GLOBALS['xoTheme'])) {
             $GLOBALS['xoTheme']->addScript('include/calendar.js');
             $GLOBALS['xoTheme']->addStylesheet('include/calendar-blue.css');

@@ -10,7 +10,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @author              Cointin Maxime (AKA Kraven30)
  * @package             system
  */
@@ -112,7 +112,7 @@ class SystemMaintenance
         if (is_dir($dir)) {
             if ($dirHandle = opendir($dir)) {
                 while (($file = readdir($dirHandle)) !== false) {
-                    if (filetype($dir . $file) === 'file' && $file !== 'index.html') {
+                    if (filetype($dir . $file) === 'file' && $file !== 'index.php') {
                         unlink($dir . $file);
                     }
                 }

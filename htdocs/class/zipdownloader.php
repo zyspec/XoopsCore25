@@ -10,7 +10,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package             kernel
  * @since               2.0.0
  * @author              Kazumi Ono (AKA onokazu) http://www.myweb.ne.jp/, http://jp.xoops.org/
@@ -45,7 +45,7 @@ class XoopsZipDownloader extends XoopsDownloader
     {
         $this->archiver = new Zipfile();
         $this->ext      = trim($ext);
-        $this->mimeType = trim($mimyType);
+        $this->mimetype = trim($mimyType);
     }
 
     /**
@@ -85,7 +85,7 @@ class XoopsZipDownloader extends XoopsDownloader
      *
      * @param string            $data
      * @param string            $filename
-     * @param int|\unknown_type $time
+     * @param int|mixed $time
      */
     public function addFileData(&$data, $filename, $time = 0)
     {

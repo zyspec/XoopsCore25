@@ -11,12 +11,12 @@
 
 /**
  * @copyright    XOOPS Project http://xoops.org/
- * @license      GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license      GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package
  * @since
  * @author       XOOPS Development Team, Kazumi Ono (AKA onokazu)
  */
-
+use Xmf\Request;
 // Check users rights
 if (!is_object($xoopsUser) || !is_object($xoopsModule) || !$xoopsUser->isAdmin($xoopsModule->mid())) {
     exit(_NOPERM);
@@ -42,7 +42,7 @@ include_once XOOPS_ROOT_PATH . '/class/xoopsformloader.php';
 function form_user($add_or_edit, $user = '')
 {
     global $xoopsConfig, $xoopsUser;
-    $uid = system_CleanVars($_REQUEST, 'uid', 0);
+    $uid = Request::getInt('uid', 0);
 
     //RMV-NOTIFY
     include_once XOOPS_ROOT_PATH . '/language/' . $xoopsConfig['language'] . '/notification.php';
@@ -229,7 +229,13 @@ function synchronize($uid, $type)
     }
     // Count forum posts
     if (XoopsModule::getByDirname('newbb')) {
-        $tables[] = array('table_name' => 'bb_posts', 'uid_column' => 'uid');
+        // Added support for NewBB 5.0 new table naming convention
+        $tableTest = new \Xmf\Database\Tables();
+        if($tableTest->useTable('newbb_posts')) {
+            $tables[] = array('table_name' => 'newbb_posts', 'uid_column' => 'uid');
+        } else {
+            $tables[] = array('table_name' => 'bb_posts', 'uid_column' => 'uid');
+        }
     }
 
     switch ($type) {

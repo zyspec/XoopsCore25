@@ -10,7 +10,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package             profile
  * @since               2.3.0
  * @author              Jan Pedersen
@@ -265,6 +265,36 @@ function profile_getFieldForm(ProfileField $field, $action = false)
     $form->addElement(new XoopsFormHidden('op', 'save'));
     $form->addElement(new XoopsFormButton('', 'submit', _SUBMIT, 'submit'));
 
+    $options = $field->getVar('field_options');
+    if (count($options) > 0) {
+        $linkText = defined('_PROFILE_AM_EDIT_OPTION_STRINGS') ? _PROFILE_AM_EDIT_OPTION_STRINGS : 'Edit Option Strings';
+        $editOptionsButton = new XoopsFormLabel('','<a href="'.$action.'&op=edit-option-strings"><i class="fa fa-fw fa-2x fa-language" aria-hidden="true"></i> ' . $linkText . '</a>');
+        $form->addElement($editOptionsButton);
+    }
+
+    return $form;
+}
+
+function profile_getFieldOptionForm(ProfileField $field, $action = false)
+{
+    if ($action === false) {
+        $action = ''; // $_SERVER['REQUEST_URI'];
+    }
+    $title = sprintf(_PROFILE_AM_EDIT, _PROFILE_AM_FIELD);
+
+    include_once $GLOBALS['xoops']->path('class/xoopsformloader.php');
+    $form = new XoopsThemeForm($title, 'form', $action, 'post', true);
+
+    $form->addElement(new XoopsFormLabel(_PROFILE_AM_TITLE, $field->getVar('field_title', 'e')));
+
+    $options = $field->getVar('field_options');
+    foreach($options as $name=>$value) {
+        $form->addElement(new XoopsFormText($name, "field_options[$name]", 80, 255, $value));
+    }
+
+    $form->addElement(new XoopsFormHidden('op', 'save-option-strings'));
+    $form->addElement(new XoopsFormButton('', 'submit', _SUBMIT, 'submit'));
+
     return $form;
 }
 
@@ -308,13 +338,17 @@ function profile_getRegisterForm(XoopsUser $user, $profile, $step = null)
 
         $elements[0][] = array(
             'element'  => new XoopsFormText(_US_NICKNAME, 'uname', 35, $GLOBALS['xoopsConfigUser']['maxuname'], $user->getVar('uname', 'e')),
-            'required' => true);
+            'required' => true,
+			'description' => sprintf(_US_DESCRIPTIONMIN, $GLOBALS['xoopsConfigUser']['minuname']) . '<br>' . sprintf(_US_DESCRIPTIONMAX, $GLOBALS['xoopsConfigUser']['maxuname']));
         $weights[0][]  = 0;
 
         $elements[0][] = array('element' => new XoopsFormText(_US_EMAIL, 'email', 35, 255, $user->getVar('email', 'e')), 'required' => true);
         $weights[0][]  = 0;
 
-        $elements[0][] = array('element' => new XoopsFormPassword(_US_PASSWORD, 'pass', 35, 32, ''), 'required' => true);
+        $elements[0][] = array(
+			'element' => new XoopsFormPassword(_US_PASSWORD, 'pass', 35, 32, ''),
+			'required' => true,
+			'description' => sprintf(_US_DESCRIPTIONMIN, $GLOBALS['xoopsConfigUser']['minpass']));
         $weights[0][]  = 0;
 
         $elements[0][] = array('element' => new XoopsFormPassword(_US_VERIFYPASS, 'vpass', 35, 32, ''), 'required' => true);
@@ -351,7 +385,14 @@ function profile_getRegisterForm(XoopsUser $user, $profile, $step = null)
         //$reg_form->insertBreak("<p>{$title}</p>{$desc}");
         //$reg_form->addElement(new XoopsFormLabel("<h2>".$title."</h2>", $desc), false);
         foreach (array_keys($elements[$k]) as $i) {
-            $reg_form->addElement($elements[$k][$i]['element'], $elements[$k][$i]['required']);
+			if (array_key_exists('description', $elements[$k][$i])){
+				$element = $elements[$k][$i]['element'];
+				$element->setDescription($elements[$k][$i]['description']);
+				$reg_form->addElement($element, $elements[$k][$i]['required']);
+				unset($element);
+			} else {
+				$reg_form->addElement($elements[$k][$i]['element'], $elements[$k][$i]['required']);
+			}
         }
     }
     //end of Dynamic User fields
@@ -366,11 +407,13 @@ function profile_getRegisterForm(XoopsUser $user, $profile, $step = null)
         $reg_form->addElement($disc_tray);
     }
     global $xoopsModuleConfig;
-    $useCaptchaAfterStep2 = $xoopsModuleConfig['profileCaptchaAfterStep1'] + 1;
-
-    if ($step_no <= $useCaptchaAfterStep2) {
+    $useCaptchaAfterStep2 = $xoopsModuleConfig['profileCaptchaAfterStep1'];
+	
+	if ($step_no == 1) {
         $reg_form->addElement(new XoopsFormCaptcha(), true);
-    }
+    } elseif($useCaptchaAfterStep2 == 1){
+		$reg_form->addElement(new XoopsFormCaptcha(), true);
+	}
 
     $reg_form->addElement(new XoopsFormHidden($next_opname, 'register'));
     $reg_form->addElement(new XoopsFormHidden('uid', $user->getVar('uid')));

@@ -10,7 +10,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package             kernel
  * @since               2.0.0
  * @author              Kazumi Ono (http://www.myweb.ne.jp/, http://jp.xoops.org/)
@@ -152,16 +152,12 @@ class XoopsMediaUploader
         }
         $this->uploadDir = $uploadDir;
 
-        $maxUploadInBytes   = $this->return_bytes(ini_get('upload_max_filesize'));
-        $maxPostInBytes     = $this->return_bytes(ini_get('post_max_size'));
-        $memoryLimitInBytes = $this->return_bytes(ini_get('memory_limit'));
-        if ((int)$maxFileSize > 0) {
-            $maxFileSizeInBytes = $this->return_bytes($maxFileSize);
-            $newMaxFileSize     = min($maxFileSizeInBytes, $maxUploadInBytes, $maxPostInBytes, $memoryLimitInBytes);
-        } else {
-            $newMaxFileSize = min($maxUploadInBytes, $maxPostInBytes, $memoryLimitInBytes);
-        }
-        $this->maxFileSize = $newMaxFileSize;
+        $limits = array();
+        $limits = $this->arrayPushIfPositive($limits, $maxFileSize);
+        $limits = $this->arrayPushIfPositive($limits, $this->return_bytes(ini_get('upload_max_filesize')));
+        $limits = $this->arrayPushIfPositive($limits, $this->return_bytes(ini_get('post_max_size')));
+        $limits = $this->arrayPushIfPositive($limits, $this->return_bytes(ini_get('memory_limit')));
+        $this->maxFileSize = min($limits);
 
         if (isset($maxWidth)) {
             $this->maxWidth = (int)$maxWidth;
@@ -205,7 +201,7 @@ class XoopsMediaUploader
      * Count the uploaded files (in case of miltiple upload)
      *
      * @param  string $media_name Name of the file field
-     * @return int
+     * @return int|false
      */
     public function countMedia($media_name) {
         if (!isset($_FILES[$media_name])) {
@@ -214,7 +210,7 @@ class XoopsMediaUploader
         }
         return count($_FILES[$media_name]['name']);
     }
-    
+
     /**
      * Fetch the uploaded file
      *
@@ -235,7 +231,7 @@ class XoopsMediaUploader
             return false;
         } elseif (is_array($_FILES[$media_name]['name']) && isset($index)) {
             $index           = (int)$index;
-            $this->mediaName = get_magic_quotes_gpc() ? stripslashes($_FILES[$media_name]['name'][$index]) : $_FILES[$media_name]['name'][$index];
+            $this->mediaName = @get_magic_quotes_gpc() ? stripslashes($_FILES[$media_name]['name'][$index]) : $_FILES[$media_name]['name'][$index];
             if ($this->randomFilename) {
                 $unique          = uniqid();
                 $this->targetFileName = '' . $unique . '--' . $this->mediaName;
@@ -250,7 +246,7 @@ class XoopsMediaUploader
             return false;
         } else {
             $media_name      =& $_FILES[$media_name];
-            $this->mediaName = get_magic_quotes_gpc() ? stripslashes($media_name['name']) : $media_name['name'];
+            $this->mediaName = @get_magic_quotes_gpc() ? stripslashes($media_name['name']) : $media_name['name'];
             if ($this->randomFilename) {
                 $unique          = uniqid();
                 $this->targetFileName = '' . $unique . '--' . $this->mediaName;
@@ -665,5 +661,21 @@ class XoopsMediaUploader
 
             return $ret;
         }
+    }
+
+    /**
+     * Push value onto set.
+     * Used in max file size calculation to eliminate -1 (unlimited) ini values
+     *
+     * @param array $set   array of values
+     * @param int   $value value to push
+     *
+     * @return mixed
+     */
+    protected function arrayPushIfPositive($set, $value) {
+        if ($value > 0) {
+            array_push($set, $value);
+        }
+        return $set;
     }
 }

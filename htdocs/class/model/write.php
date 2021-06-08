@@ -10,7 +10,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package             kernel
  * @subpackage          model
  * @since               2.3.0
@@ -347,7 +347,7 @@ class XoopsModelWrite extends XoopsModelAbstract
      * @param  CriteriaElement|CriteriaCompo $criteria {@link CriteriaElement} with conditions to meet
      * @param  bool   $force    force to delete
      * @param  bool   $asObject delete in object way: instantiate all objects and delete one by one
-     * @return bool
+     * @return bool|int
      */
     public function deleteAll(CriteriaElement $criteria = null, $force = true, $asObject = false)
     {

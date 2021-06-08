@@ -10,7 +10,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package             core
  * @since               2.5.7
  * @author              luciorota <lucio.rota@gmail.com>, Joe Lencioni <joe@shiftingpixel.com>
@@ -68,8 +68,8 @@ define('ENABLE_IMAGEFILTER', true); // Set to false to avoid excessive server lo
 define('ENABLE_ROUNDCORNER', true); // Set to false to avoid excessive server load
 define('ENABLE_IMAGEROTATE', true); // Set to false to avoid excessive server load
 
-if (get_magic_quotes_runtime()) {
-    set_magic_quotes_runtime(false); // will never get called on PHP 5.4+
+if (function_exists('set_magic_quotes_runtime')) {
+    @set_magic_quotes_runtime(false); // will never get called on PHP 5.4+
 }
 if (function_exists('mb_http_output')) {
     mb_http_output('pass');
@@ -125,7 +125,7 @@ function doConditionalGet($etag, $lastModified)
  * @param int[]    $radii       array(top left, top right, bottom left, bottom right) of pixel radius
  *                               for each corner. A 0 disables rounding on a corner.
  *
- * @return resource
+ * @return resource|\GdImage
  */
 function imageCreateCorners($sourceImage, $radii)
 {
@@ -309,7 +309,7 @@ if (!empty($imageId)) {
             exit404BadReq();
         }
     } else {
-        if ($imageUrl{0} === '/') {
+        if ($imageUrl[0] === '/') {
             $imageUrl = substr($imageUrl, 0, 1);
         }
         $imagePath = $imageUrl;

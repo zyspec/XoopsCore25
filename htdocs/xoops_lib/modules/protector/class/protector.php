@@ -290,6 +290,7 @@ class Protector
         }
 
         if (empty($this->_conn)) {
+            mysqli_report(MYSQLI_REPORT_OFF);
             $this->_conn = new mysqli(XOOPS_DB_HOST, XOOPS_DB_USER, XOOPS_DB_PASS);
             if (0 !== $this->_conn->connect_errno) {
                 die('db connection failed.');
@@ -624,7 +625,7 @@ class Protector
             if (strlen($val) < 6) {
                 return null;
             }
-            $val = get_magic_quotes_gpc() ? stripslashes($val) : $val;
+            $val = @get_magic_quotes_gpc() ? stripslashes($val) : $val;
             foreach ($this->_dblayertrap_doubtful_needles as $needle) {
                 if (false !== stripos($val, $needle)) {
                     $this->_dblayertrap_doubtfuls[] = $val;

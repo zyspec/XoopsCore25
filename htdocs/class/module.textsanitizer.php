@@ -9,8 +9,8 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @copyright       (c) 2000-2021 XOOPS Project (https://xoops.org)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package             class
  * @since               2.0.0
  * @author              Kazumi Ono (http://www.myweb.ne.jp/, http://jp.xoops.org/)
@@ -22,7 +22,7 @@
  * Abstract class for extensions
  *
  * @author              Taiwen Jiang <phppp@users.sourceforge.net>
- * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
+ * @copyright       (c) 2000-2021 XOOPS Project (https://xoops.org)
  */
 class MyTextSanitizerExtension
 {
@@ -46,31 +46,30 @@ class MyTextSanitizerExtension
      * loadConfig
      *
      * @param  string $path
-     * @return string
+     * @return string|array
      */
     public static function loadConfig($path = null)
     {
         $ts   = MyTextSanitizer::getInstance();
-        $path = str_replace(DIRECTORY_SEPARATOR, '/', $path);
-        if (false === strpos($path, '/')) {
-            if (is_dir($ts->path_basic . '/' . $path)) {
-                $path = $ts->path_basic . '/' . $path;
-            } else {
-                if (is_dir($ts->path_plugin . '/' . $path)) {
-                    $path = $ts->path_plugin . '/' . $path;
-                }
+        $extensionName = (null === $path) ? '' : basename($path);
+        $pathDist = $ts->path_basic;
+        $pathConfig = $ts->path_config;
+
+        if ('' !== $extensionName) {
+            $configFileName = $pathConfig . '/config.' . $extensionName . '.php';
+            $distFileName = $pathDist . '/' . $extensionName . '/config.' . $extensionName . '.dist.php';
+        } else {
+            $configFileName = $pathConfig . '/config.php';
+            $distFileName = $pathDist . '/config.dist.php';
+        }
+        if (!file_exists($configFileName)) {
+            if (false === copy($distFileName, $configFileName)) {
+                trigger_error('Could not create textsanitizer config file ' . basename($configFileName));
+                return $a = array();
             }
         }
-        $config_default = array();
-        $config_custom  = array();
-        if (file_exists($path . '/config.php')) {
-            $config_default = include $path . '/config.php';
-        }
-        if (file_exists($path . '/config.custom.php')) {
-            $config_custom = include $path . '/config.custom.php';
-        }
-
-        return self::mergeConfig($config_default, $config_custom);
+        $configs = include $configFileName;
+        return $configs;
     }
 
     /**
@@ -110,6 +109,10 @@ class MyTextSanitizerExtension
     /**
      * decode
      *
+     * @param string $url
+     * @param string|integer $width
+     * @param string|integer $height
+     *
      * @return Null
      */
     public static function decode($url, $width, $height)
@@ -128,7 +131,7 @@ class MyTextSanitizerExtension
  * @author        Kazumi Ono <onokazu@xoops.org>
  * @author        Taiwen Jiang <phppp@users.sourceforge.net>
  * @author        Goghs Cheng
- * @copyright (c) 2000-2016 XOOPS Project - www.xoops.org
+ * @copyright (c) 2000-2021 XOOPS Project (https://xoops.org)
  */
 class MyTextSanitizer
 {
@@ -144,7 +147,7 @@ class MyTextSanitizer
 
     /**
      *
-     * @var holding reference to text
+     * @var string holding reference to text
      */
     public $text         = '';
     public $patterns     = array();
@@ -156,6 +159,7 @@ class MyTextSanitizer
     //mb------------------------------
 
     public $path_basic;
+    public $path_config;
     public $path_plugin;
 
     public $config;
@@ -173,6 +177,7 @@ class MyTextSanitizer
     public function __construct()
     {
         $this->path_basic  = XOOPS_ROOT_PATH . '/class/textsanitizer';
+        $this->path_config = XOOPS_VAR_PATH . '/configs/textsanitizer';
         $this->path_plugin = XOOPS_ROOT_PATH . '/Frameworks/textsanitizer';
         $this->config      = $this->loadConfig();
     }
@@ -181,20 +186,25 @@ class MyTextSanitizer
      * Enter description here...
      *
      * @param  string $name
-     * @return array
+     * @return array|string
      */
     public function loadConfig($name = null)
     {
+        // NB: sending a null name results in an infinite loop
         if (!empty($name)) {
             return MyTextSanitizerExtension::loadConfig($name);
         }
-        $config_default = include $this->path_basic . '/config.php';
-        $config_custom  = array();
-        if (file_exists($file = $this->path_basic . '/config.custom.php')) {
-            $config_custom = include $file;
-        }
 
-        return $this->mergeConfig($config_default, $config_custom);
+        $configFileName = $this->path_config . '/config.php';
+        $distFileName = $this->path_basic . '/config.dist.php';
+
+        if (!file_exists($configFileName)) {
+            if (false===copy($distFileName, $configFileName)) {
+                trigger_error('Could not create textsanitizer config file ' . basename($configFileName));
+                return array();
+            }
+        }
+        return include $configFileName;
     }
 
     /**
@@ -202,7 +212,7 @@ class MyTextSanitizer
      *
      * @param  array $config_default
      * @param  array $config_custom
-     * @return unknown
+     * @return mixed
      */
     public function mergeConfig($config_default, $config_custom)
     {
@@ -222,9 +232,7 @@ class MyTextSanitizer
     /**
      * Access the only instance of this class
      *
-     * @return object
-     * @static
-     * @staticvar object
+     * @return MyTextSanitizer
      */
     public static function getInstance()
     {
@@ -292,7 +300,7 @@ class MyTextSanitizer
      */
     public function makeClickableCallback01($match)
     {
-        return $match[1] . "<a href=\"$match[2]://$match[3]\" title=\"$match[2]://$match[3]\" rel=\"external\">$match[2]://" . $this->truncate($match[3]) . '</a>';
+        return $match[1] . "<a href=\"$match[2]://$match[3]\" title=\"$match[2]://$match[3]\" rel=\"noopener external\">$match[2]://" . $this->truncate($match[3]) . '</a>';
     }
 
     /**
@@ -302,7 +310,7 @@ class MyTextSanitizer
      */
     public function makeClickableCallback02($match)
     {
-        return $match[1] . "<a href=\"http://www.$match[2]$match[6]\" title=\"www.$match[2]$match[6]\" rel=\"external\">" . $this->truncate('www.' . $match[2] . $match[6]) . '</a>';
+        return $match[1] . "<a href=\"http://www.$match[2]$match[6]\" title=\"www.$match[2]$match[6]\" rel=\"noopener external\">" . $this->truncate('www.' . $match[2] . $match[6]) . '</a>';
     }
 
     /**
@@ -406,11 +414,11 @@ class MyTextSanitizer
         $patterns[]     = "/\[siteurl=(['\"]?)([^\"'<>]*)\\1](.*)\[\/siteurl\]/sU";
         $replacements[] = '<a href="' . XOOPS_URL . '/\\2" title="">\\3</a>';
         $patterns[]     = "/\[url=(['\"]?)(http[s]?:\/\/[^\"'<>]*)\\1](.*)\[\/url\]/sU";
-        $replacements[] = '<a href="\\2" rel="external" title="">\\3</a>';
+        $replacements[] = '<a href="\\2" rel="noopener external" title="">\\3</a>';
         $patterns[]     = "/\[url=(['\"]?)(ftp?:\/\/[^\"'<>]*)\\1](.*)\[\/url\]/sU";
         $replacements[] = '<a href="\\2" rel="external" title="">\\3</a>';
         $patterns[]     = "/\[url=(['\"]?)([^'\"<>]*)\\1](.*)\[\/url\]/sU";
-        $replacements[] = '<a href="http://\\2" rel="external" title="">\\3</a>';
+        $replacements[] = '<a href="http://\\2" rel="noopener external" title="">\\3</a>';
         $patterns[]     = "/\[color=(['\"]?)([a-zA-Z0-9]*)\\1](.*)\[\/color\]/sU";
         $replacements[] = '<span style="color: #\\2;">\\3</span>';
         $patterns[]     = "/\[size=(['\"]?)([a-z0-9-]*)\\1](.*)\[\/size\]/sU";
@@ -520,23 +528,8 @@ class MyTextSanitizer
      */
     public function addSlashes($text)
     {
-        if (!get_magic_quotes_gpc()) {
+        if (!@get_magic_quotes_gpc()) {
             $text = addslashes($text);
-        }
-
-        return $text;
-    }
-
-    /**
-     * if magic_quotes_gpc is on, stirip back slashes
-     *
-     * @param  string $text
-     * @return string
-     */
-    public function stripSlashesGPC($text)
-    {
-        if (get_magic_quotes_gpc()) {
-            $text = stripslashes($text);
         }
 
         return $text;
@@ -593,6 +586,13 @@ class MyTextSanitizer
         $charset = (defined('_CHARSET') ? _CHARSET : 'UTF-8');
         if (function_exists('mb_convert_encoding')) {
             $text = mb_convert_encoding($text, $charset, mb_detect_encoding($text, mb_detect_order(), true));
+        }
+        if ($html && $br) {
+            $testText = strip_tags($text);
+            if (mb_strlen($text) != mb_strlen($testText)) {
+                $br = 0;
+            }
+            unset($testText);
         }
         if ($html != 1) {
             // html not allowed
@@ -736,7 +736,7 @@ class MyTextSanitizer
      * MyTextSanitizer::loadExtension()
      *
      * @param  mixed $name
-     * @return bool|null
+     * @return MyTextSanitizerExtension|false
      */
     public function loadExtension($name)
     {
@@ -753,10 +753,7 @@ class MyTextSanitizer
 
             return false;
         }
-        $extension = null;
-        $extension = new $class($this);
-
-        return $extension;
+        return new $class($this);
     }
 
     /**
@@ -793,11 +790,24 @@ class MyTextSanitizer
     }
 
     // #################### Deprecated Methods ######################
+
     /**
-     * *#@+
+     * if magic_quotes_gpc is on, strip back slashes
      *
-     * @deprecated
+     * @param  string $text
+     * @return string
+     * @deprecated as of XOOPS 2.5.11 and will be removed in next XOOPS version
+     *
+     * This remains here until we officially drop support for PHP 5.3 in next release
      */
+    public function stripSlashesGPC($text)
+    {
+        if (@get_magic_quotes_gpc()) {
+            $text = stripslashes($text);
+        }
+
+        return $text;
+    }
 
     /**
      * MyTextSanitizer::codeSanitizer()
@@ -805,6 +815,7 @@ class MyTextSanitizer
      * @param  mixed $str
      * @param  mixed $image
      * @return mixed|string
+     * @deprecated will be removed in next XOOPS version
      */
     public function codeSanitizer($str, $image = 1)
     {
@@ -823,6 +834,7 @@ class MyTextSanitizer
      * @param  integer $smiley
      * @param  mixed   $bbcode
      * @return mixed|string
+     * @deprecated will be removed in next XOOPS version
      */
     public function sanitizeForDisplay($text, $allowhtml = 0, $smiley = 1, $bbcode = 1)
     {
@@ -854,6 +866,7 @@ class MyTextSanitizer
      * @param  integer $smiley
      * @param  mixed   $bbcode
      * @return mixed|string
+     * @deprecated will be removed in next XOOPS version
      */
     public function sanitizeForPreview($text, $allowhtml = 0, $smiley = 1, $bbcode = 1)
     {
@@ -883,6 +896,7 @@ class MyTextSanitizer
      *
      * @param  mixed $text
      * @return string
+     * @deprecated will be removed in next XOOPS version
      */
     public function makeTboxData4Save($text)
     {
@@ -898,6 +912,7 @@ class MyTextSanitizer
      * @param  mixed $text
      * @param  mixed $smiley
      * @return mixed|string
+     * @deprecated will be removed in next XOOPS version
      */
     public function makeTboxData4Show($text, $smiley = 0)
     {
@@ -912,6 +927,7 @@ class MyTextSanitizer
      *
      * @param  mixed $text
      * @return string
+     * @deprecated will be removed in next XOOPS version
      */
     public function makeTboxData4Edit($text)
     {
@@ -926,6 +942,7 @@ class MyTextSanitizer
      * @param  mixed $text
      * @param  mixed $smiley
      * @return mixed|string
+     * @deprecated will be removed in next XOOPS version
      */
     public function makeTboxData4Preview($text, $smiley = 0)
     {
@@ -941,6 +958,7 @@ class MyTextSanitizer
      *
      * @param  mixed $text
      * @return string
+     * @deprecated will be removed in next XOOPS version
      */
     public function makeTboxData4PreviewInForm($text)
     {
@@ -955,6 +973,7 @@ class MyTextSanitizer
      *
      * @param  mixed $text
      * @return string
+     * @deprecated will be removed in next XOOPS version
      */
     public function makeTareaData4Save($text)
     {
@@ -971,6 +990,7 @@ class MyTextSanitizer
      * @param  integer $smiley
      * @param  mixed   $xcode
      * @return mixed|string
+     * @deprecated will be removed in next XOOPS version
      */
     public function &makeTareaData4Show(&$text, $html = 1, $smiley = 1, $xcode = 1)
     {
@@ -985,6 +1005,7 @@ class MyTextSanitizer
      *
      * @param  mixed $text
      * @return string
+     * @deprecated will be removed in next XOOPS version
      */
     public function makeTareaData4Edit($text)
     {
@@ -1001,6 +1022,7 @@ class MyTextSanitizer
      * @param  integer $smiley
      * @param  mixed   $xcode
      * @return mixed|string
+     * @deprecated will be removed in next XOOPS version
      */
     public function &makeTareaData4Preview(&$text, $html = 1, $smiley = 1, $xcode = 1)
     {
@@ -1015,6 +1037,7 @@ class MyTextSanitizer
      *
      * @param  mixed $text
      * @return string
+     * @deprecated will be removed in next XOOPS version
      */
     public function makeTareaData4PreviewInForm($text)
     {
@@ -1030,6 +1053,7 @@ class MyTextSanitizer
      *
      * @param  mixed $text
      * @return string
+     * @deprecated will be removed in next XOOPS version
      */
     public function makeTareaData4InsideQuotes($text)
     {
@@ -1043,6 +1067,7 @@ class MyTextSanitizer
      *
      * @param  mixed $text
      * @return string
+     * @deprecated will be removed in next XOOPS version
      */
     public function oopsStripSlashesGPC($text)
     {
@@ -1056,6 +1081,7 @@ class MyTextSanitizer
      *
      * @param  mixed $text
      * @return mixed|string
+     * @deprecated will be removed in next XOOPS version
      */
     public function oopsStripSlashesRT($text)
     {
@@ -1072,6 +1098,7 @@ class MyTextSanitizer
      *
      * @param  mixed $text
      * @return string
+     * @deprecated will be removed in next XOOPS version
      */
     public function oopsAddSlashes($text)
     {
@@ -1085,6 +1112,7 @@ class MyTextSanitizer
      *
      * @param  mixed $text
      * @return string
+     * @deprecated will be removed in next XOOPS version
      */
     public function oopsHtmlSpecialChars($text)
     {
@@ -1098,6 +1126,7 @@ class MyTextSanitizer
      *
      * @param  mixed $text
      * @return string
+     * @deprecated will be removed in next XOOPS version
      */
     public function oopsNl2Br($text)
     {

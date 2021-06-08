@@ -10,7 +10,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package             profile
  * @since               2.3.0
  * @author              Jan Pedersen
@@ -29,7 +29,10 @@ $op = isset($_REQUEST['op']) ? $_REQUEST['op'] : (isset($_REQUEST['id']) ? 'edit
 $handler = xoops_getModuleHandler('regstep');
 switch ($op) {
     case 'list':
-        $GLOBALS['xoopsTpl']->assign('steps', $handler->getObjects(null, true, false));
+        $criteria = new CriteriaCompo();
+        $criteria->setSort('step_order');
+        $criteria->setOrder('ASC');
+        $GLOBALS['xoopsTpl']->assign('steps', $handler->getObjects($criteria, true, false));
         $template_main = 'profile_admin_steplist.tpl';
         break;
 

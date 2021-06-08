@@ -10,7 +10,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package             kernel
  * @since               2.0.0
  * @author              Kazumi Ono (AKA onokazu) http://www.myweb.ne.jp/, http://jp.xoops.org/
@@ -37,6 +37,9 @@ $GLOBALS['xoopsLogger']->addDeprecated("'/class/xoopscommments.php' is deprecate
 class XoopsComments extends XoopsObject
 {
     public $ctable;
+    /**
+     * @var \XoopsMySQLDatabase
+     */
     public $db;
 
     /**
@@ -88,7 +91,7 @@ class XoopsComments extends XoopsObject
     /**
      * Save Comment
      *
-     * @return int
+     * @return int|false
      */
     public function store()
     {
@@ -160,7 +163,7 @@ class XoopsComments extends XoopsObject
     /**
      * Get Comments Tree
      *
-     * @return unknown
+     * @return mixed
      */
     public function getCommentTree()
     {

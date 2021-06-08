@@ -23,29 +23,29 @@ class HTMLPurifier_VarParser_Flexible extends HTMLPurifier_VarParser
             // Note: if code "breaks" from the switch, it triggers a generic
             // exception to be thrown. Specific errors can be specifically
             // done here.
-            case self::MIXED:
+            case self::C_MIXED:
             case self::ISTRING:
-            case self::STRING:
+            case self::C_STRING:
             case self::TEXT:
             case self::ITEXT:
                 return $var;
-            case self::INT:
+            case self::C_INT:
                 if (is_string($var) && ctype_digit($var)) {
                     $var = (int)$var;
                 }
                 return $var;
-            case self::FLOAT:
+            case self::C_FLOAT:
                 if ((is_string($var) && is_numeric($var)) || is_int($var)) {
                     $var = (float)$var;
                 }
                 return $var;
-            case self::BOOL:
+            case self::C_BOOL:
                 if (is_int($var) && ($var === 0 || $var === 1)) {
                     $var = (bool)$var;
                 } elseif (is_string($var)) {
-                    if ($var === 'on' || $var === 'true' || $var == '1') {
+                    if ($var == 'on' || $var == 'true' || $var == '1') {
                         $var = true;
-                    } elseif ($var === 'off' || $var === 'false' || $var == '0') {
+                    } elseif ($var == 'off' || $var == 'false' || $var == '0') {
                         $var = false;
                     } else {
                         throw new HTMLPurifier_VarParserException("Unrecognized value '$var' for $type");

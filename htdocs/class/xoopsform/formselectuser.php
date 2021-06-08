@@ -12,7 +12,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright       The XOOPS Project (http://xoops.org)
- * @license         GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license         GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package         kernel
  * @subpackage      form
  * @since           2.0.0
@@ -135,6 +135,7 @@ class XoopsFormSelectUser extends XoopsFormElementTray
                     for (var k = 0; k < sel.options.length; k++) {
                         if (sel.options[k].value == val) {
                             added = true;
+                            sel.options[k].selected = true;
                             break;
                         }
                     }

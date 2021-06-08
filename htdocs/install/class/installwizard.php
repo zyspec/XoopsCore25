@@ -11,10 +11,10 @@
 
 /**
  * See the enclosed file license.txt for licensing information.
- * If you did not receive this file, get it at http://www.gnu.org/licenses/gpl-2.0.html
+ * If you did not receive this file, get it at https://www.gnu.org/licenses/gpl-2.0.html
  *
  * @copyright    (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license          GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license          GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package          installer
  * @since            2.3.0
  * @author           Haruki Setoyama  <haruki@planewave.org>
@@ -207,10 +207,10 @@ class XoopsInstallWizard
     {
         $pages     = array_keys($this->pages);
         $pageIndex = $this->pageIndex;
-        if (!(int)$page{0}) {
-            if ($page{0} == '+') {
+        if (!(int)$page[0]) {
+            if ($page[0] == '+') {
                 $pageIndex += substr($page, 1);
-            } elseif ($page{0} == '-') {
+            } elseif ($page[0] == '-') {
                 $pageIndex -= substr($page, 1);
             } else {
                 $pageIndex = (int)array_search($page, $pages);

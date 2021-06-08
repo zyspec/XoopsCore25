@@ -10,7 +10,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package             profile
  * @since               2.3.0
  * @author              Jan Pedersen
@@ -115,6 +115,17 @@ switch ($op) {
         }
         include_once dirname(__DIR__) . '/include/forms.php';
         $form = profile_getFieldForm($obj);
+        $form->display();
+        break;
+
+    case 'edit-option-strings':
+        $obj = $profilefield_handler->get($_REQUEST['id']);
+        $fieldOptions = $obj->getVar('field_options');
+        if (empty($fieldOptions)) { //If no option strings exist
+            redirect_header('field.php', 2, _PROFILE_AM_FIELDNOTCONFIGURABLE);
+        }
+        include_once dirname(__DIR__) . '/include/forms.php';
+        $form = profile_getFieldOptionForm($obj);
         $form->display();
         break;
 
@@ -289,6 +300,22 @@ switch ($op) {
         echo $obj->getHtmlErrors();
         $form = profile_getFieldForm($obj);
         $form->display();
+        break;
+
+    case 'save-option-strings':
+        if (!$GLOBALS['xoopsSecurity']->check()) {
+            redirect_header('field.php', 3, implode(',', $GLOBALS['xoopsSecurity']->getErrors()));
+        }
+        $obj = $profilefield_handler->get($_REQUEST['id']);
+        $fieldOptions = \Xmf\Request::getArray('field_options');
+        if (empty($fieldOptions)) { //If no option strings exist
+            redirect_header('field.php', 2, _PROFILE_AM_FIELDNOTCONFIGURABLE);
+        }
+        $obj->setVar('field_options', $fieldOptions);
+        if ($profilefield_handler->insert($obj)) {
+            redirect_header('field.php', 2, sprintf(_PROFILE_AM_SAVEDSUCCESS, _PROFILE_AM_FIELD));
+        }
+        redirect_header('field.php', 2, implode(',', $obj->getErrors()));
         break;
 
     case 'delete':

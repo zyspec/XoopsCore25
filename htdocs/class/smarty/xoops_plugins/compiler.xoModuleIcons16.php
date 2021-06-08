@@ -12,7 +12,7 @@
  * xoModuleIcons16 Smarty compiler plug-in
  *
  * @copyright    (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license          GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license          GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @author           Andricq Nicolas (AKA MusS)
  * @since            2.5.2
  * @param $argStr
@@ -27,7 +27,7 @@ function smarty_compiler_xoModuleIcons16($argStr, &$smarty)
     //    $icons = xoops_getModuleOption('typeicons', 'system');
     //    if ( $icons == '' ) $icons = 'default';
 
-    if (file_exists($xoops->path('Frameworks/moduleclasses/icons/16/index.html'))) {
+    if (file_exists($xoops->path('Frameworks/moduleclasses/icons/16/index.php'))) {
         $url = $xoops->url('Frameworks/moduleclasses/icons/16/' . $argStr);
     } else {
         if (file_exists($xoops->path('modules/system/images/icons/default/' . $argStr))) {

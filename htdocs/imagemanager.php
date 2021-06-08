@@ -10,7 +10,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package             core
  * @since               2.0.0
  */
@@ -69,6 +69,7 @@ switch ($op) {
             }
             $xoopsTpl->assign('cat_options', $cat_options);
             if ($catshow > 0) {
+                /** @var \XoopsImageHandler $image_handler */
                 $image_handler = xoops_getHandler('image');
                 $criteria      = new CriteriaCompo(new Criteria('imgcat_id', $catshow));
                 $criteria->add(new Criteria('image_display', 1));

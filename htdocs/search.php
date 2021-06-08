@@ -13,10 +13,10 @@
  * XOOPS global search
  *
  * See the enclosed file license.txt for licensing information.
- * If you did not receive this file, get it at http://www.gnu.org/licenses/gpl-2.0.html
+ * If you did not receive this file, get it at https://www.gnu.org/licenses/gpl-2.0.html
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package             core
  * @since               2.0.0
  * @author              Kazumi Ono (AKA onokazu)
@@ -166,7 +166,11 @@ switch ($action) {
             if (in_array($mid, $available_modules)) {
                 $module  = $modules[$mid];
                 $results = $module->search($queries, $andor, 5, 0);
-                $count   = count($results);
+				if (empty($results)){
+					$count = 0;
+                } else {
+					$count = count($results);
+				}
                 if (is_array($results) && $count > 0) {
                     $nomatch = false;
 					$module_name = $module->getVar('name');					

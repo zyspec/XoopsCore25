@@ -5,7 +5,7 @@
     IMG_OFF = '<{xoAdminIcons cancel.png}>';
 </script>
 <!-- Buttons -->
-<{if $type == 's'}>
+<{if $type|default:false == 's'}>
     <div style="height: 30px;">
         <div class="floatright">
             <div class="xo-buttons" >
@@ -18,7 +18,7 @@
         </div>
     </div>
 <{/if}>
-<{if $view_cat}>
+<{if $view_cat|default:false}>
     <!-- Display Avatar header for switch between system & custom category -->
     <table class="outer" cellspacing="1">
         <thead>
@@ -49,7 +49,7 @@
     <br>
 <{/if}>
 <!-- Display Avatar list for each category -->
-<{if $avatars_list}>
+<{if $avatars_list|default:false}>
     <{foreach item=avatar from=$avatars_list}>
         <div class="floatleft">
             <div class="ui-corner-all xo-thumb txtcenter">
@@ -84,13 +84,13 @@
     <{/foreach}>
     <!-- Display Avatars navigation -->
     <div class="clear">&nbsp;</div>
-    <{if $nav_menu}>
+    <{if $nav_menu|default:false}>
         <div class="xo-pagenav floatright"><{$nav_menu}></div>
         <div class="clear spacer"></div>
     <{/if}>
 <{/if}>
 
-<{if $multiupload}>
+<{if $multiupload|default:false}>
     <div class="floatright">
         <div class="xo-buttons">
             <button id="xo-addavatar-btn" class="ui-corner-all tooltip" onclick='location="admin.php?fct=avatars&amp;op=listavt&amp;type=s"'
@@ -135,7 +135,7 @@
                 maxHeightImageError: "<{$smarty.const._MAXHEIGHTIMAGEERROR}>",
                 maxWidthImageError: "<{$smarty.const._MAXWIDTHIMAGEERROR}>",
                 minHeightImageError: "<{$smarty.const._MINHEIGHTIMAGEERROR}>",
-                minWidthImageError: "<{$smarty.const.__MINWIDTHIMAGEERROR}>",
+                minWidthImageError: "<{$smarty.const._MINWIDTHIMAGEERROR}>",
                 retryFailTooManyItems: "<{$smarty.const._RETRYFAILTOOMANYITEMS}>",
                 onLeave: "<{$smarty.const._ONLEAVE}>",
                 unsupportedBrowserIos8Safari: "<{$smarty.const._UNSUPPORTEDBROWSERIOS8SAFARI}>"
@@ -171,7 +171,7 @@
 <{/if}>
 
 <!-- Display Avatar form (add,edit) -->
-<{if $form}>
+<{if $form|default:false}>
     <div class="spacer"><{$form}></div>
 <{/if}>
 <!-- Display Avatar images on edit page -->

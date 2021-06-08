@@ -10,7 +10,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package             kernel
  * @subpackage          Xoop Notifications Functions
  * @since               2.0.0
@@ -198,6 +198,7 @@ function &notificationEvents($category_name, $enabled_only, $module_id = null)
             $mail_template_dir = $dir;
 
             include_once $GLOBALS['xoops']->path('include/comment_constants.php');
+            /** @var \XoopsConfigHandler $config_handler */
             $config_handler = xoops_getHandler('config');
             $com_config     = $config_handler->getConfigsByCat(0, $module_id);
             if (!$enabled_only) {

@@ -9,14 +9,13 @@
  */
 
 /**
- * Legacy style form renderer
+ * Bootstrap3 style form renderer
  *
  * @category  XoopsForm
  * @package   XoopsFormRendererBootstrap3
  * @author    Richard Griffith <richard@geekwright.com>
- * @copyright 2017 XOOPS Project (http://xoops.org)
- * @license   GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
- * @link      http://xoops.org
+ * @copyright 2017-2021 XOOPS Project (https://xoops.org)
+ * @license   GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  */
 class XoopsFormRendererBootstrap3 implements XoopsFormRendererInterface
 {
@@ -221,8 +220,6 @@ class XoopsFormRendererBootstrap3 implements XoopsFormRendererInterface
      */
     public function renderFormDhtmlTextArea(XoopsFormDhtmlTextArea $element)
     {
-        static $js_loaded;
-
         xoops_loadLanguage('formdhtmltextarea');
         $ret = '';
         // actions
@@ -259,14 +256,23 @@ class XoopsFormRendererBootstrap3 implements XoopsFormRendererInterface
                 . '</div>' . '   </fieldset>' . '</div>';
         }
         // Load javascript
-        if (empty($js_loaded)) {
-            $javascript = ($element->js ? '<script type="text/javascript">' . $element->js . '</script>' : '')
-                . '<script type="text/javascript" src="' . XOOPS_URL . '/include/formdhtmltextarea.js"></script>';
-            $ret        = $javascript . $ret;
-            $js_loaded  = true;
-        }
+        $javascript_file = XOOPS_URL . '/include/formdhtmltextarea.js';
+        $javascript_file_element = 'include_formdhtmltextarea_js';
+        $javascript = ($element->js ? '<script type="text/javascript">' . $element->js . '</script>' : '');
+        $javascript .= <<<EOJS
+<script>
+    var el = document.getElementById('{$javascript_file_element}');
+    if (el === null) {
+        var xformtag = document.createElement('script');
+        xformtag.id = '{$javascript_file_element}';
+        xformtag.type = 'text/javascript';
+        xformtag.src = '{$javascript_file}';
+        document.body.appendChild(xformtag);
+    }
+</script>
+EOJS;
 
-        return $ret;
+        return $javascript . $ret;
     }
 
     /**
@@ -350,7 +356,7 @@ class XoopsFormRendererBootstrap3 implements XoopsFormRendererInterface
         $fontStr .= '<div class="btn-group">'
             . '<button type="button" class="btn btn-default btn-sm dropdown-toggle" title="'. _SIZE .'"'
             . ' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
-            . '<span class = "glyphicon glyphicon-text-height"></span><span class="caret"></span></button>'
+            . '<span class = "fa fa-text-height"></span><span class="caret"></span></button>'
             . '<ul class="dropdown-menu">';
             //. _SIZE . '&nbsp;&nbsp;<span class="caret"></span></button><ul class="dropdown-menu">';
         foreach ($GLOBALS['formtextdhtml_sizes'] as $value => $name) {
@@ -362,7 +368,7 @@ class XoopsFormRendererBootstrap3 implements XoopsFormRendererInterface
         $fontStr .= '<div class="btn-group">'
             . '<button type="button" class="btn btn-default btn-sm dropdown-toggle" title="'. _FONT .'"'
             . ' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
-            . '<span class = "glyphicon glyphicon-font"></span><span class="caret"></span></button>'
+            . '<span class = "fa fa-font"></span><span class="caret"></span></button>'
             . '<ul class="dropdown-menu">';
             //. _FONT . '&nbsp;&nbsp;<span class="caret"></span></button><ul class="dropdown-menu">';
         foreach ($fontarray as $font) {
@@ -374,7 +380,7 @@ class XoopsFormRendererBootstrap3 implements XoopsFormRendererInterface
         $fontStr .= '<div class="btn-group">'
             . '<button type="button" class="btn btn-default btn-sm dropdown-toggle" title="'. _COLOR .'"'
             . ' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
-            . '<span class = "glyphicon glyphicon-text-color"></span><span class="caret"></span></button>'
+            . '<span class = "fa fa-tint"></span><span class="caret"></span></button>'
             . '<ul class="dropdown-menu">';
             //. _COLOR . '&nbsp;&nbsp;<span class="caret"></span></button><ul class="dropdown-menu">';
         foreach ($colorArray as $color => $hex) {
@@ -600,7 +606,7 @@ class XoopsFormRendererBootstrap3 implements XoopsFormRendererInterface
             $display_value = date(_SHORTDATESTRING, $ele_value);
         }
 
-        $jstime = formatTimestamp($ele_value, _SHORTDATESTRING);
+        $jstime = formatTimestamp($ele_value, 'm/d/Y');
         if (isset($GLOBALS['xoTheme']) && is_object($GLOBALS['xoTheme'])) {
             $GLOBALS['xoTheme']->addScript('include/calendar.js');
             $GLOBALS['xoTheme']->addStylesheet('include/calendar-blue.css');
@@ -700,7 +706,7 @@ class XoopsFormRendererBootstrap3 implements XoopsFormRendererInterface
             . '" value="' . $display_value . '"' . $element->getExtra() . ' />'
             . '<span class="input-group-btn"><button class="btn btn-default" type="button"'
             . ' onclick="return showCalendar(\'' . $ele_name . '\');">'
-            . '<span class="fa fa-calendar" aria-hidden="true"></span></button>'
+            . '<span class="fa fa-calendar" aria-hidden="true"></span>&nbsp;</button>'
             . '</span>'
             . '</div>';
     }

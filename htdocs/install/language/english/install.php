@@ -3,7 +3,7 @@
  * Installer main english strings declaration file
  *
  * @copyright    (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license          GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license          GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package          installer
  * @since            2.3.0
  * @author           Haruki Setoyama  <haruki@planewave.org>
@@ -194,3 +194,5 @@ define('XOOPS_ERROR_ENCOUNTERED', 'Error');
 define('XOOPS_ERROR_SEE_BELOW', 'See below for messages.');
 define('MODULES_AVAILABLE', 'Available Modules');
 define('INSTALL_THIS_MODULE', 'Add %s');
+//2.5.11
+define('ERR_COPY_CONFIG_FILE', 'Could not copy the configuration file %s');

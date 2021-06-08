@@ -1,7 +1,7 @@
 <?php
 /**
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license         GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license         GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * _LANGCODE    en
  * _CHARSET     UTF-8
  */
@@ -41,3 +41,6 @@ define('_AM_SYSTEM_MAILUSERS_SENDTOUSERS2', 'Send to:');
 define('_AM_SYSTEM_MAILUSERS_SENT', 'Sent Users');
 define('_AM_SYSTEM_MAILUSERS_SENTNUM', '%s - %s (total: %s users)');
 define('_AM_SYSTEM_MAILUSERS_TIMEFORMAT', '(Format yyyy-mm-dd, optional)');
+
+//XOOPS 2.5.11
+define('_AM_SYSTEM_MAILUSERS_MAILTAGS5', '{X_NAME} will print name or uname if empty');

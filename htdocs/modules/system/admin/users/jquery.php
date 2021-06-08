@@ -11,12 +11,13 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @author              Maxime Cointin (AKA Kraven30)
  * @package             system
  */
 /* @var XoopsUser $xoopsUser */
 /* @var XoopsModule $xoopsModule */
+use Xmf\Request;
 
 require dirname(dirname(dirname(dirname(__DIR__)))) . '/mainfile.php';
 require XOOPS_ROOT_PATH . '/header.php';
@@ -50,9 +51,15 @@ switch ($op) {
         $tables[] = array('table_name' => 'xoopscomments', 'uid_column' => 'com_uid', 'criteria' => new Criteria('com_status', XOOPS_COMMENT_ACTIVE));
         // Count forum posts
         if (XoopsModule::getByDirname('newbb')) {
-            $tables[] = array('table_name' => 'bb_posts', 'uid_column' => 'uid');
+            // Added support for NewBB 5.0 new table naming convention
+            $tableTest = new \Xmf\Database\Tables();
+            if($tableTest->useTable('newbb_posts')) {
+                $tables[] = array('table_name' => 'newbb_posts', 'uid_column' => 'uid');
+            } else {
+                $tables[] = array('table_name' => 'bb_posts', 'uid_column' => 'uid');
+            }
         }
-        $uid         = system_CleanVars($_REQUEST, 'uid', 'int');
+        $uid         = Request::getInt('uid', 0);
         $total_posts = 0;
         foreach ($tables as $table) {
             $criteria = new CriteriaCompo();

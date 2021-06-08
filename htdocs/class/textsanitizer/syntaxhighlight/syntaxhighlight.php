@@ -10,7 +10,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @package             class
  * @subpackage          textsanitizer
  * @since               2.3.0
@@ -38,7 +38,7 @@ class MytsSyntaxhighlight extends MyTextSanitizerExtension
         }
         $source = $ts->undoHtmlSpecialChars($source);
         $source = stripslashes($source);
-        $source = MytsSyntaxhighlight::php($source);
+        $source = $this->php($source);
 
         return $source;
     }

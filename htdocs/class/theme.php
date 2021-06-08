@@ -9,14 +9,16 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright       (c) 2000-2016 XOOPS Project (www.xoops.org)
- * @license             GNU GPL 2 (http://www.gnu.org/licenses/gpl-2.0.html)
+ * @copyright       (c) 2000-2020 XOOPS Project (https://xoops.org)
+ * @license             GNU GPL 2 (https://www.gnu.org/licenses/gpl-2.0.html)
  * @author              Skalpa Keo <skalpa@xoops.org>
  * @author              Taiwen Jiang <phppp@users.sourceforge.net>
  * @since               2.3.0
  * @package             kernel
  * @subpackage          xos_opal_Theme
  */
+
+use Xmf\Request;
 
 defined('XOOPS_ROOT_PATH') || exit('Restricted access');
 
@@ -38,7 +40,7 @@ class xos_opal_ThemeFactory
      */
     public $allowedThemes = array();
     /**
-     * Default theme to instanciate if none specified
+     * Default theme to instantiate if none specified
      *
      * @var string
      */
@@ -51,7 +53,7 @@ class xos_opal_ThemeFactory
     public $allowUserSelection = true;
 
     /**
-     * Instanciate the specified theme
+     * Instantiate the specified theme
      * @param  array $options
      * @param  array $initArgs
      * @return null|xos_opal_Theme
@@ -72,8 +74,18 @@ class xos_opal_ThemeFactory
             }
             $GLOBALS['xoopsConfig']['theme_set'] = $options['folderName'];
         }
+        $testPath = isset($options['themesPath'])
+            ? XOOPS_ROOT_PATH  . '/' . $options['themesPath'] . '/' . $options['folderName']
+            : XOOPS_THEME_PATH . '/' . $options['folderName'];
+        if (!(file_exists($testPath  . '/theme.tpl')
+            || file_exists($testPath . '/theme.html'))
+        ) {
+            trigger_error('Theme not found -- ' . $options['folderName']);
+            $this->defaultTheme = 'default';
+            $options['folderName'] = $this->defaultTheme;
+            $GLOBALS['xoopsConfig']['theme_set'] = $options['folderName'];
+        }
         $options['path'] = XOOPS_THEME_PATH . '/' . $options['folderName'];
-        $inst            = null;
         $inst            = new xos_opal_Theme();
         foreach ($options as $k => $v) {
             $inst->$k = $v;
@@ -277,10 +289,17 @@ class xos_opal_Theme
         $GLOBALS['xoTheme']  = $this;
         $GLOBALS['xoopsTpl'] = $this->template;
         $tempPath = str_replace('\\', '/', realpath(XOOPS_ROOT_PATH) . '/');
-        $tempName = str_replace('\\', '/',  realpath($_SERVER['SCRIPT_FILENAME']));
+        $tempName = str_replace('\\', '/', realpath($_SERVER['SCRIPT_FILENAME']));
         $xoops_page = str_replace($tempPath, '', $tempName);
         if (strpos($xoops_page, 'modules') !== false) {
             $xoops_page = str_replace('modules/', '', $xoops_page);
+        }
+        $tempScriptname = str_replace('\\', '/', $_SERVER['SCRIPT_NAME']);
+        $tempRequesturi = str_replace('\\', '/', Request::getString('REQUEST_URI', '', 'SERVER'));
+        if (strlen($tempRequesturi) > strlen($tempScriptname)) {
+            $xoops_modulepage =  $xoops_page . str_replace($tempScriptname, '', $tempRequesturi);
+        } else {
+            $xoops_modulepage =  '';
         }
         $xoops_page = str_replace('.php', '', $xoops_page);
         if (isset($GLOBALS['xoopsConfig']['startpage'])) {
@@ -309,6 +328,7 @@ class xos_opal_Theme
                 ? $GLOBALS['xoopsModule']->getVar('dirname') : 'system',
             'xoops_page'       => $xoops_page,
             'xoops_startpage'  => $xoops_startpage,
+            'xoops_modulepage' => $xoops_modulepage,
             'xoops_banner'     => ($GLOBALS['xoopsConfig']['banners'] && $this->renderBanner)
                 ? xoops_getbanner() : '&nbsp;',
             'xoops_pagetitle'  => isset($GLOBALS['xoopsModule']) && is_object($GLOBALS['xoopsModule'])
@@ -339,8 +359,13 @@ class xos_opal_Theme
         $criteria->add(new Criteria('conf_catid', XOOPS_CONF_METAFOOTER));
         $config = $configHandler->getConfigs($criteria, true);
         foreach (array_keys($config) as $i) {
-            $name  = $config[$i]->getVar('conf_name', 'n');
+            $name = $config[$i]->getVar('conf_name', 'n');
             $value = $config[$i]->getVar('conf_value', 'n');
+            // limited substitutions for {X_SITEURL} and {X_YEAR}
+            if ($name === 'footer' || $name === 'meta_copyright') {
+                $value = str_replace('{X_SITEURL}', XOOPS_URL . '/', $value);
+                $value = str_replace('{X_YEAR}', date('Y', time()), $value);
+            }
             if (substr($name, 0, 5) === 'meta_') {
                 $this->addMeta('meta', substr($name, 5), $value);
             } else {
@@ -846,7 +871,7 @@ class xos_opal_Theme
     }
 
     /**
-     * Return a themable file resource path
+     * Return a themeable file resource path
      *
      * @param  string $path
      * @return string
